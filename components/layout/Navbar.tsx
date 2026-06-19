@@ -24,7 +24,7 @@ export default function Navbar() {
           <motion.div
             className="flex items-center justify-center"
           >
-            <img src="./logo.png" alt="Logo" className="h-10 w-10 rounded-xl"/>
+            <img src="/logo.png" alt="Logo" className="h-10 w-10 rounded-xl"/>
           </motion.div>
           <span className="text-xl font-bold tracking-tight font-grotesk text-theme-text">
             Tool<span className="text-theme-gold">Verse</span>{" "}

@@ -8,6 +8,11 @@ export const metadata: Metadata = {
   description:
     "A futuristic suite of productivity tools: Email Utilization Checker, Global Phone Number Generator, Domain Distiller, and WebHarvest Pro. Built for professionals.",
   keywords: ["email checker", "phone number generator", "domain extractor", "web scraper", "productivity tools"],
+  icons: {
+    icon: "/logo.png",
+    shortcut: "/logo.png",
+    apple: "/logo.png",
+  },
 };
 
 export default function RootLayout({
@@ -20,7 +25,6 @@ export default function RootLayout({
       <head>
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
-        <link rel="icon" href="./logo.png" />
         <link
           href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@300;400;500;600;700&display=swap"
           rel="stylesheet"
