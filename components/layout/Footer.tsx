@@ -21,9 +21,9 @@ export default function Footer() {
             <Link href="/tools/email-checker" className="hover:text-theme-text transition-colors">Email Checker</Link>
             <Link href="/tools/number-generator" className="hover:text-theme-text transition-colors">Number Gen</Link>
             <Link href="/tools/domain-distiller" className="hover:text-theme-text transition-colors">Domain Distiller</Link>
-            <Link href="/tools/utm-builder" className="hover:text-theme-text transition-colors">UTM Builder</Link>
+            {/* <Link href="/tools/utm-builder" className="hover:text-theme-text transition-colors">UTM Builder</Link>
             <Link href="/tools/qr-generator" className="hover:text-theme-text transition-colors">QR Generator</Link>
-            <Link href="/tools/webharvest-pro" className="hover:text-theme-text transition-colors">WebHarvest</Link>
+            <Link href="/tools/webharvest-pro" className="hover:text-theme-text transition-colors">WebHarvest</Link> */}
           </div>
 
           {/* Credits */}
