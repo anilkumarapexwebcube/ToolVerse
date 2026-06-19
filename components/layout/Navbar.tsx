@@ -7,8 +7,10 @@ import { useState } from "react";
 
 const navLinks = [
   { href: "/tools/email-checker",   label: "Email Checker" },
-  { href: "/tools/number-generator", label: "Number Gen" },
-  { href: "/tools/domain-distiller", label: "Domain Distiller" },
+  { href: "/tools/number-generator", label: "Numbers" },
+  { href: "/tools/domain-distiller", label: "Domains" },
+  { href: "/tools/utm-builder",      label: "UTM" },
+  { href: "/tools/qr-generator",     label: "QR" },
   { href: "/tools/webharvest-pro",   label: "WebHarvest" },
 ];
 
@@ -35,7 +37,7 @@ export default function Navbar() {
         </Link>
 
         {/* Desktop Links */}
-        <div className="hidden md:flex items-center gap-1">
+        <div className="hidden lg:flex items-center gap-1">
           {navLinks.map((l) => {
             const active = pathname === l.href;
             return (
@@ -57,7 +59,7 @@ export default function Navbar() {
 
         {/* Mobile burger */}
         <button
-          className="md:hidden p-2 text-theme-text hover:bg-slate-100 rounded-lg transition-colors"
+          className="lg:hidden p-2 text-theme-text hover:bg-slate-100 rounded-lg transition-colors"
           onClick={() => setOpen(!open)}
           aria-label="Toggle menu"
         >
@@ -71,7 +73,7 @@ export default function Navbar() {
           initial={{ opacity: 0, y: -10 }}
           animate={{ opacity: 1, y: 0 }}
           exit={{ opacity: 0, y: -10 }}
-          className="md:hidden px-6 pb-4 flex flex-col gap-2 bg-white border-b border-theme-border"
+          className="lg:hidden px-6 pb-4 flex flex-col gap-2 bg-white border-b border-theme-border"
         >
           {navLinks.map((l) => {
             const active = pathname === l.href;

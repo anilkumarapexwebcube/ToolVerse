@@ -70,7 +70,7 @@ const tools = [
 ];
 
 const stats = [
-  { value: "4", label: "Precision Tools", icon: <Layers size={20} /> },
+  { value: "6", label: "Precision Tools", icon: <Layers size={20} /> },
   { value: "60+", label: "Countries Supported", icon: <Globe size={20} /> },
   { value: "100%", label: "Client-Side Privacy", icon: <Shield size={20} /> },
   { value: "0ms", label: "Server Latency", icon: <Zap size={20} /> },
@@ -152,7 +152,9 @@ export default function Home() {
             { icon: <Mail size={22} />, delay: 0 },
             { icon: <Globe size={22} />, delay: 0.4 },
             { icon: <Filter size={22} />, delay: 0.8 },
-            { icon: <Cpu size={22} />, delay: 1.2 },
+            { icon: <LinkIcon size={22} />, delay: 1.2 },
+            { icon: <QrCode size={22} />, delay: 1.6 },
+            { icon: <Cpu size={22} />, delay: 2 },
           ].map((item, i) => (
             <motion.div
               key={i}
