@@ -30,7 +30,7 @@ export default function RootLayout({
           rel="stylesheet"
         />
       </head>
-      <body className="min-h-screen" style={{ background: "#e0e5ec" }}>
+      <body className="min-h-screen" style={{ background: "#e0e5ec" }} suppressHydrationWarning>
         <div className="grid-bg relative">
           <Navbar />
           <main className="relative z-10">{children}</main>

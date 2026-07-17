@@ -181,7 +181,7 @@ async function fetchOpenPageRank(domain: string, apiKey: string | undefined) {
   try {
     const json: any = await res.json();
     const row =
-      json?.response?.[0] ?? json?.data?.[0] ?? json?.domains?.[0] ?? json?.[0];
+      json?.results?.[0] ?? json?.response?.[0] ?? json?.data?.[0] ?? json?.[0];
     const opr = Number(
       row?.open_page_rank ?? row?.page_rank_decimal ?? row?.rank_decimal
     );
