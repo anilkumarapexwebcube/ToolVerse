@@ -6,6 +6,7 @@ import { Zap, Menu, X } from "lucide-react";
 import { useState } from "react";
 
 const navLinks = [
+  { href: "/tools/domain-insights", label: "Domain Insights" },
   { href: "/tools/email-checker",   label: "Email Checker" },
   { href: "/tools/number-generator", label: "Numbers" },
   { href: "/tools/domain-distiller", label: "Domains" },

@@ -3,10 +3,20 @@ import { motion } from "framer-motion";
 import Link from "next/link";
 import {
   Mail, Globe, Filter, Cpu, ArrowRight, Zap,
-  CheckCircle, Shield, Layers, Star, Link as LinkIcon, QrCode
+  CheckCircle, Shield, Layers, Star, Link as LinkIcon, QrCode, Search
 } from "lucide-react";
 
 const tools = [
+  {
+    href:        "/tools/domain-insights",
+    icon:        <Search size={24} />,
+    name:        "Domain Insights",
+    tagline:     "DA/DR, traffic rank & SEO — free",
+    description: "Enter any domain to get authority score, global traffic rank, estimated visits, domain age, DNS, and a full on-page SEO health check — sourced from open datasets, no sign-up.",
+    badge:       "NEW",
+    features:    ["Authority & rank", "DNS + WHOIS", "On-page SEO audit"],
+    comingSoon:  false,
+  },
   {
     href:        "/tools/email-checker",
     icon:        <Mail size={24} />,
