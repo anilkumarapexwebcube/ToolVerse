@@ -10,9 +10,7 @@ const navLinks = [
   { href: "/tools/email-checker",   label: "Email Checker" },
   { href: "/tools/number-generator", label: "Numbers" },
   { href: "/tools/domain-distiller", label: "Domains" },
-  // { href: "/tools/utm-builder",      label: "UTM" },
-  // { href: "/tools/qr-generator",     label: "QR" },
-  // { href: "/tools/webharvest-pro",   label: "WebHarvest" },
+  { href: "/tools/qr-generator",     label: "QR" },
 ];
 
 export default function Navbar() {

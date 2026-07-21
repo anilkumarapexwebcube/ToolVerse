@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any -- this module parses untyped third-party JSON (RDAP, DoH, Open PageRank, Wayback) */
 /**
  * Domain Insights — free, transparent domain intelligence.
  *
@@ -8,7 +9,7 @@
  *
  *   - Open PageRank (Keywords Everywhere)  → authority (0-100) + referring domains   [needs free API key]
  *   - Tranco list API                      → global popularity rank                  [keyless]
- *   - RDAP                                  → domain age, registrar, expiry           [keyless]
+ *   - RDAP                                 → domain age, registrar, expiry           [keyless]
  *   - DNS-over-HTTPS (Cloudflare)          → IP, nameservers, mail/SPF               [keyless]
  *   - Wayback Machine (Internet Archive)   → first-seen-on-web date                  [keyless]
  *   - Live homepage fetch                  → HTTPS/SSL, title, meta, H1/H2, tech     [keyless]
@@ -48,7 +49,9 @@ export interface DomainInsights {
   };
   traffic: {
     globalRank: number | null; // Tranco global rank
-    estimatedMonthlyVisits: number | null;
+    estimatedMonthlyVisits: number | null; // total visits, all channels (SimilarWeb-style)
+    organicVisits: number | null; // estimated Google-organic visits (Ahrefs-style)
+    organicSharePct: number; // modeled organic share used (0-100)
     tier: string; // human label e.g. "Very High", "Low"
     source: MetricSource;
   };
@@ -481,14 +484,57 @@ function estimateTrafficFromRank(rank: number | null): {
   tier: string;
 } {
   if (!rank || rank <= 0) return { visits: null, tier: "Unranked (low)" };
-  // rough power-law fit to public rank→visits observations. ORDER OF MAGNITUDE only.
-  const visits = Math.round(Math.pow(10, 10.96 - 1.13 * Math.log10(rank)));
+  // piecewise log-log interpolation through anchors calibrated against public
+  // SimilarWeb/Semrush figures for sites at those ranks. ESTIMATE only.
+  const anchors: [number, number][] = [
+    [1, 8.0e10],      // #1 google-scale (~80B/mo total)
+    [10, 2.0e9],
+    [100, 2.0e8],
+    [1_000, 1.5e7],
+    [10_000, 2.0e6],
+    [100_000, 2.0e5],
+    [1_000_000, 2.0e4],
+  ];
+  let visits: number;
+  if (rank >= 1_000_000) {
+    // extrapolate below the top-1M with the last segment's slope
+    visits = 3.0e4 * Math.pow(1_000_000 / rank, 1);
+  } else {
+    let i = 0;
+    while (i < anchors.length - 2 && rank > anchors[i + 1][0]) i++;
+    const [r1, v1] = anchors[i];
+    const [r2, v2] = anchors[i + 1];
+    const t = (Math.log10(rank) - Math.log10(r1)) / (Math.log10(r2) - Math.log10(r1));
+    visits = Math.pow(10, Math.log10(v1) + t * (Math.log10(v2) - Math.log10(v1)));
+  }
   let tier = "Low";
   if (rank <= 1_000) tier = "Very High";
   else if (rank <= 10_000) tier = "High";
   else if (rank <= 100_000) tier = "Medium";
   else if (rank <= 1_000_000) tier = "Modest";
-  return { visits: clamp(visits, 50, 50_000_000_000), tier };
+  return { visits: Math.round(clamp(visits, 50, 100_000_000_000)), tier };
+}
+
+/**
+ * Estimated share of traffic that comes from Google organic search.
+ * Real per-site organic share (Ahrefs-style) needs a keyword database (paid);
+ * this models it from free on-page signals. ROUGH ESTIMATE.
+ */
+function estimateOrganicShare(args: {
+  wordCount: number;
+  ageYears: number | null;
+  hasStructuredData: boolean;
+  h2Count: number;
+}): number {
+  const { wordCount, ageYears, hasStructuredData, h2Count } = args;
+  // baseline ~ typical organic share of total visits across the web (~25%)
+  let share = 0.25;
+  if (wordCount > 2000) share += 0.08; // content-heavy → more organic
+  else if (wordCount < 300) share -= 0.10; // thin/app homepage → less organic
+  if ((ageYears ?? 0) > 8) share += 0.04; // established sites rank more
+  if (hasStructuredData) share += 0.03;
+  if (h2Count >= 8) share += 0.03; // structured long-form content
+  return clamp(share, 0.06, 0.55);
 }
 
 // ── Derived: estimated authority when Open PageRank is unavailable ────────────
@@ -542,20 +588,28 @@ function computeMetrics(args: {
       ? clamp((Math.log10(referringDomains + 1) / 7) * 100, 0, 100) // 10M ref domains ≈ 100
       : null;
 
-  // DR — Ahrefs-style, backlink/link-graph weighted → Open PageRank is the best anchor.
+  // DR — Ahrefs-style, link-graph weighted → Open PageRank is the closest free
+  // anchor (calibrated: OPR 9.5+ sites carry Ahrefs DR in the mid-90s).
   const drBase = refScore ?? clamp(0.7 * popScore + 0.3 * ageScore, 0, 100);
-  const dr = Math.round(oprScore ?? drBase);
+  const dr = Math.round(
+    oprScore != null ? clamp(0.9 * oprScore + 0.1 * (refScore ?? oprScore), 0, 100) : drBase
+  );
 
-  // DA — Moz-style blended authority (popularity + age + trust + on-page).
+  // DA — Moz-style blended authority (link graph + popularity + age + trust + on-page).
   const daBlend = clamp(
-    0.45 * popScore + 0.25 * ageScore + 0.2 * trustScore + 0.1 * (onPageQuality * 100),
+    0.4 * popScore +
+      0.2 * ageScore +
+      0.2 * trustScore +
+      0.1 * (onPageQuality * 100) +
+      0.1 * (refScore ?? popScore),
     0,
     100
   );
-  const da = Math.round(oprScore != null ? 0.55 * oprScore + 0.45 * daBlend : daBlend);
+  const da = Math.round(oprScore != null ? 0.65 * oprScore + 0.35 * daBlend : daBlend);
 
-  // PA — Moz-style page authority for the homepage (leans on DA + this page's on-page quality).
-  const pa = Math.round(clamp(0.7 * da + 0.3 * (onPageQuality * 100), 0, 100));
+  // PA — Moz-style page authority for the homepage. Homepage PA typically tracks
+  // a few points under DA for established sites, lifted by on-page quality.
+  const pa = Math.round(clamp(0.8 * da + 0.15 * (onPageQuality * 100), 0, 100));
 
   return { da, pa, dr };
 }
@@ -629,9 +683,22 @@ export async function getDomainInsights(
     }
   }
 
-  // prefer OPR global rank; fall back to Tranco for popularity/traffic
-  const globalRank = opr?.globalRank ?? tranco ?? null;
-  const traffic = estimateTrafficFromRank(globalRank);
+  // Traffic MUST use a popularity/visits-based rank (Tranco = aggregated real
+  // usage), NOT Open PageRank's rank which is a link-authority ranking and would
+  // wildly inflate traffic for heavily-linked-but-lower-traffic sites.
+  const popularityRank = tranco ?? null;
+  const globalRank = popularityRank; // "Global Rank" displayed = popularity rank
+  const traffic = estimateTrafficFromRank(popularityRank);
+
+  // split off an estimated Google-organic portion (Ahrefs-style metric)
+  const organicShare = estimateOrganicShare({
+    wordCount: onPageSafe.wordCount,
+    ageYears,
+    hasStructuredData: onPageSafe.hasStructuredData,
+    h2Count: onPageSafe.h2Count,
+  });
+  const organicVisits =
+    traffic.visits != null ? Math.round(traffic.visits * organicShare) : null;
 
   // on-page quality hint (0-1) for the fallback authority estimate
   const opq =
@@ -751,6 +818,8 @@ export async function getDomainInsights(
     traffic: {
       globalRank,
       estimatedMonthlyVisits: traffic.visits,
+      organicVisits,
+      organicSharePct: Math.round(organicShare * 100),
       tier: traffic.tier,
       source: { label: "Tranco global rank → modeled visits", estimate: true },
     },

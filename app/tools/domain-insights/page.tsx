@@ -43,15 +43,28 @@ function authorityVerdict(score: number): string {
 
 // ── building blocks ──────────────────────────────────────────────────────────
 
+/** small copy button shown at a card's corner */
+function CopyBtn({ onCopy }: { onCopy: () => void }) {
+  return (
+    <button
+      onClick={onCopy}
+      title="Copy value"
+      className="absolute bottom-3 right-3 p-1.5 rounded-lg text-slate-400 opacity-0 group-hover:opacity-100 hover:bg-slate-100 hover:text-theme-gold transition-all"
+    >
+      <Copy size={13} />
+    </button>
+  );
+}
+
 /** Flagship 0-100 metric card (DA / PA / DR) with a coloured progress bar */
 function MetricCard({
-  acronym, name, value, delay = 0,
-}: { acronym: string; name: string; value: number; delay?: number }) {
+  acronym, name, value, delay = 0, onCopy,
+}: { acronym: string; name: string; value: number; delay?: number; onCopy: () => void }) {
   const color = scoreColor(value);
   return (
     <motion.div
       initial={{ opacity: 0, y: 18 }} animate={{ opacity: 1, y: 0 }} transition={{ delay }}
-      className="card-base card-hover p-5 relative overflow-hidden"
+      className="card-base card-hover group p-5 relative overflow-hidden"
     >
       <span className="absolute top-4 right-4 text-[9px] font-bold px-1.5 py-0.5 rounded bg-theme-gold/10 text-theme-gold border border-theme-gold/20">
         EST
@@ -68,33 +81,36 @@ function MetricCard({
         <motion.div className="h-full rounded-full" style={{ background: color }}
           initial={{ width: 0 }} animate={{ width: `${value}%` }} transition={{ duration: 1, delay: delay + 0.1, ease: "easeOut" }} />
       </div>
+      <CopyBtn onCopy={onCopy} />
     </motion.div>
   );
 }
 
-/** Flagship traffic card */
-function TrafficCard({
-  visits, rank, tier, delay = 0,
-}: { visits: string; rank: string; tier: string; delay?: number }) {
+/** Flagship traffic card (used for both total & organic) */
+function TrafficBig({
+  title, subtitle, visits, foot, color, delay = 0, onCopy,
+}: {
+  title: string; subtitle: string; visits: string; foot: React.ReactNode;
+  color: string; delay?: number; onCopy: () => void;
+}) {
   return (
     <motion.div
       initial={{ opacity: 0, y: 18 }} animate={{ opacity: 1, y: 0 }} transition={{ delay }}
-      className="card-base card-hover p-5 relative overflow-hidden"
+      className="card-base card-hover group p-5 relative overflow-hidden"
     >
       <span className="absolute top-4 right-4 text-[9px] font-bold px-1.5 py-0.5 rounded bg-theme-gold/10 text-theme-gold border border-theme-gold/20">
         EST
       </span>
       <div className="flex items-baseline gap-2 mb-1">
-        <span className="text-lg font-extrabold font-grotesk text-theme-accent">Traffic</span>
-        <span className="text-[11px] font-semibold text-theme-muted">Monthly</span>
+        <span className="text-lg font-extrabold font-grotesk" style={{ color }}>{title}</span>
+        <span className="text-[11px] font-semibold text-theme-muted">{subtitle}</span>
       </div>
       <div className="flex items-baseline gap-1 mb-3">
-        <span className="text-4xl font-bold font-grotesk leading-none text-theme-accent">{visits}</span>
+        <span className="text-4xl font-bold font-grotesk leading-none" style={{ color }}>{visits}</span>
         <span className="text-sm font-semibold text-theme-muted">/mo</span>
       </div>
-      <div className="text-xs text-theme-muted">
-        Global rank <span className="font-semibold text-theme-text">{rank}</span> · {tier}
-      </div>
+      <div className="text-xs text-theme-muted">{foot}</div>
+      <CopyBtn onCopy={onCopy} />
     </motion.div>
   );
 }
@@ -188,21 +204,67 @@ export default function DomainInsightsPage() {
     }
   }
 
-  function copyJson() {
-    if (!data) return;
-    navigator.clipboard.writeText(JSON.stringify(data, null, 2));
-    showToast("Report JSON copied");
+  /** flat label→value pairs used by both Copy (text) and Export (CSV) */
+  function reportRows(d: DomainInsights): [string, string][] {
+    return [
+      ["Domain", d.domain],
+      ["DA (Domain Authority)", String(d.metrics.da)],
+      ["PA (Page Authority)", String(d.metrics.pa)],
+      ["DR (Domain Rating)", String(d.metrics.dr)],
+      ["Traffic - Total (all channels)/mo", fmtNum(d.traffic.estimatedMonthlyVisits)],
+      ["Traffic - Organic (search)/mo", fmtNum(d.traffic.organicVisits)],
+      ["Organic Share (%)", String(d.traffic.organicSharePct)],
+      ["Global Rank", d.traffic.globalRank ? `#${d.traffic.globalRank}` : "—"],
+      ["Popularity Tier", d.traffic.tier],
+      ["Backlinks (Referring Domains)", d.authority.referringDomains != null ? String(d.authority.referringDomains) : "—"],
+      ["Open PageRank", d.authority.openPageRank != null ? String(d.authority.openPageRank) : "—"],
+      ["Domain Age (years)", d.domainInfo.ageYears != null ? String(d.domainInfo.ageYears) : "—"],
+      ["Created", fmtDate(d.domainInfo.createdAt)],
+      ["Expires", fmtDate(d.domainInfo.expiresAt)],
+      ["Registrar", d.domainInfo.registrar || "—"],
+      ["IP Address", d.dns.ip || "—"],
+      ["Mail Provider", d.dns.mailProvider || "—"],
+      ["SPF", d.dns.hasSpf ? "Yes" : "No"],
+      ["DMARC", d.dns.hasDmarc ? "Yes" : "No"],
+      ["HTTPS", d.onPage.https ? "Yes" : "No"],
+      ["Load Time (ms)", d.onPage.responseMs != null ? String(d.onPage.responseMs) : "—"],
+      ["Title Length", String(d.onPage.titleLength)],
+      ["Meta Description Length", String(d.onPage.metaDescriptionLength)],
+      ["H1 Count", String(d.onPage.h1Count)],
+      ["H2 Count", String(d.onPage.h2Count)],
+      ["Word Count", String(d.onPage.wordCount)],
+      ["Technologies", d.onPage.tech.join("; ") || "—"],
+      ["SEO Health (%)", String(d.healthScore)],
+    ];
   }
-  function downloadJson() {
+
+  function copyOne(label: string, value: string) {
+    navigator.clipboard.writeText(`${label}: ${value}`);
+    showToast(`${label} copied`);
+  }
+
+  function copyText() {
     if (!data) return;
-    const blob = new Blob([JSON.stringify(data, null, 2)], { type: "application/json" });
+    const text = reportRows(data)
+      .map(([k, v]) => `${k}: ${v}`)
+      .join("\n");
+    navigator.clipboard.writeText(`Domain Insights — ${data.domain}\n\n${text}`);
+    showToast("Metrics copied as text");
+  }
+
+  function downloadCsv() {
+    if (!data) return;
+    const esc = (s: string) => `"${s.replace(/"/g, '""')}"`;
+    const csv = ["Metric,Value", ...reportRows(data).map(([k, v]) => `${esc(k)},${esc(v)}`)].join("\r\n");
+    // BOM so Excel opens UTF-8 correctly
+    const blob = new Blob(["﻿" + csv], { type: "text/csv;charset=utf-8;" });
     const url = URL.createObjectURL(blob);
     const a = document.createElement("a");
     a.href = url;
-    a.download = `${data.domain}-insights.json`;
+    a.download = `${data.domain}-insights.csv`;
     a.click();
     URL.revokeObjectURL(url);
-    showToast("Report downloaded");
+    showToast("CSV downloaded (opens in Excel)");
   }
 
   const passed = data ? data.checks.filter((c) => c.ok).length : 0;
@@ -319,21 +381,36 @@ export default function DomainInsightsPage() {
                   {data.healthScore}% health</span>
               </div>
               <div className="flex gap-2">
-                <button onClick={copyJson} className="btn-secondary px-4 py-2 text-sm flex items-center gap-2"><Copy size={14} /> Copy</button>
-                <button onClick={downloadJson} className="btn-secondary px-4 py-2 text-sm flex items-center gap-2"><Download size={14} /> Export</button>
+                <button onClick={copyText} className="btn-secondary px-4 py-2 text-sm flex items-center gap-2"><Copy size={14} /> Copy</button>
+                <button onClick={downloadCsv} className="btn-secondary px-4 py-2 text-sm flex items-center gap-2"><Download size={14} /> CSV</button>
               </div>
             </motion.div>
 
-            {/* ── Flagship metrics: DA · PA · DR · Traffic ── */}
-            <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
-              <MetricCard acronym="DA" name="Domain Authority" value={data.metrics.da} delay={0} />
-              <MetricCard acronym="PA" name="Page Authority" value={data.metrics.pa} delay={0.06} />
-              <MetricCard acronym="DR" name="Domain Rating" value={data.metrics.dr} delay={0.12} />
-              <TrafficCard
+            {/* ── Authority metrics: DA · PA · DR ── */}
+            <div className="grid grid-cols-3 gap-4">
+              <MetricCard acronym="DA" name="Domain Authority" value={data.metrics.da} delay={0}
+                onCopy={() => copyOne("DA", String(data.metrics.da))} />
+              <MetricCard acronym="PA" name="Page Authority" value={data.metrics.pa} delay={0.06}
+                onCopy={() => copyOne("PA", String(data.metrics.pa))} />
+              <MetricCard acronym="DR" name="Domain Rating" value={data.metrics.dr} delay={0.12}
+                onCopy={() => copyOne("DR", String(data.metrics.dr))} />
+            </div>
+
+            {/* ── Traffic: total (all channels) vs organic (search) ── */}
+            <div className="grid sm:grid-cols-2 gap-4">
+              <TrafficBig
+                title="Traffic" subtitle="Total · all channels" color="var(--accent)"
                 visits={fmtNum(data.traffic.estimatedMonthlyVisits)}
-                rank={fmtRank(data.traffic.globalRank)}
-                tier={data.traffic.tier}
-                delay={0.18}
+                foot={<>Global rank <span className="font-semibold text-theme-text">{fmtRank(data.traffic.globalRank)}</span> · {data.traffic.tier}</>}
+                delay={0.16}
+                onCopy={() => copyOne("Traffic (total)", `${fmtNum(data.traffic.estimatedMonthlyVisits)}/mo`)}
+              />
+              <TrafficBig
+                title="Organic" subtitle="Google search only" color="#16a34a"
+                visits={fmtNum(data.traffic.organicVisits)}
+                foot={<>~{data.traffic.organicSharePct}% of total visits · Ahrefs-style</>}
+                delay={0.22}
+                onCopy={() => copyOne("Organic traffic", `${fmtNum(data.traffic.organicVisits)}/mo`)}
               />
             </div>
 
@@ -432,11 +509,13 @@ export default function DomainInsightsPage() {
             <p className="flex items-start gap-2 text-xs text-theme-muted leading-relaxed px-1">
               <Info size={13} className="text-theme-gold flex-shrink-0 mt-0.5" />
               <span>
-                <strong className="text-theme-text">DA, PA, DR &amp; Traffic are estimates</strong> computed from open data
+                <strong className="text-theme-text">DA, PA, DR &amp; Traffic are estimates</strong> from open data
                 (Open PageRank, Tranco, RDAP, Cloudflare DNS &amp; the Internet Archive). Moz DA/PA and Ahrefs DR are
-                proprietary paid metrics — no free API returns those exact numbers, so these approximate them on the same
-                0-100 scale and are marked <span className="font-semibold text-theme-gold">EST</span>. Add a free Open
-                PageRank key to sharpen DA/DR and unlock backlink counts.
+                proprietary paid metrics — no free API returns those exact numbers, so these approximate them and are
+                marked <span className="font-semibold text-theme-gold">EST</span>.{" "}
+                <strong className="text-theme-text">Traffic here = total visits (all channels), SimilarWeb-style.</strong>{" "}
+                Ahrefs&rsquo; &ldquo;Organic traffic&rdquo; counts Google-search visits only, so it is normally much lower —
+                the two are not directly comparable.
                 {data.warnings.length > 0 && <> Some sources were unavailable: {data.warnings.join(", ")}.</>}
               </span>
             </p>
