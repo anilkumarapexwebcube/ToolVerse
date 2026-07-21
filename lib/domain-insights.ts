@@ -98,6 +98,13 @@ export interface DomainInsights {
     tech: string[];
     source: MetricSource;
   };
+  /** buying-suitability for guest posts / link placements */
+  guestPost: {
+    score: number;
+    verdict: string;
+    spamRisk: "Low" | "Medium" | "High";
+    reasons: GuestPostReason[];
+  };
   /** 0-100 quick SEO health from the free on-page + trust signals */
   healthScore: number;
   checks: { label: string; ok: boolean; detail?: string }[];
@@ -614,6 +621,99 @@ function computeMetrics(args: {
   return { da, pa, dr };
 }
 
+// ── Derived: Guest-post buying suitability ───────────────────────────────────
+// Combines authority, REAL organic traffic, age, indexability and a PBN/link-scheme
+// red-flag (high DR but near-zero organic traffic → classic link farm).
+
+export interface GuestPostReason {
+  label: string;
+  status: "good" | "warn" | "bad";
+  detail?: string;
+}
+
+function computeGuestPost(args: {
+  da: number;
+  dr: number;
+  organicVisits: number | null;
+  ageYears: number | null;
+  noindex: boolean;
+  referringDomains: number | null;
+}): {
+  score: number;
+  verdict: string;
+  spamRisk: "Low" | "Medium" | "High";
+  reasons: GuestPostReason[];
+} {
+  const { da, dr, organicVisits, ageYears, noindex, referringDomains } = args;
+  const reasons: GuestPostReason[] = [];
+  let score = 0;
+
+  // 1) Authority — DR/DA (max 28)
+  const auth = (da + dr) / 2;
+  score += clamp(auth * 0.28, 0, 28);
+  reasons.push({
+    label: "Authority (DR/DA)",
+    status: auth >= 40 ? "good" : auth >= 20 ? "warn" : "bad",
+    detail: `avg ${Math.round(auth)}/100`,
+  });
+
+  // 2) Real organic audience — the metric that actually matters for guest posts (max 34)
+  const org = organicVisits ?? 0;
+  const orgPts = org >= 50_000 ? 34 : org >= 10_000 ? 26 : org >= 2_000 ? 16 : org >= 500 ? 8 : 2;
+  score += orgPts;
+  reasons.push({
+    label: "Organic search traffic",
+    status: org >= 10_000 ? "good" : org >= 2_000 ? "warn" : "bad",
+    detail: organicVisits != null ? `~${Math.round(org).toLocaleString()}/mo` : "unknown",
+  });
+
+  // 3) Age / establishment (max 18)
+  const age = ageYears ?? 0;
+  score += age >= 3 ? 18 : age >= 1 ? 10 : 3;
+  reasons.push({
+    label: "Domain age",
+    status: age >= 3 ? "good" : age >= 1 ? "warn" : "bad",
+    detail: ageYears != null ? `${ageYears}y` : "unknown",
+  });
+
+  // 4) Indexable (max 20) — a noindex site passes no SEO value
+  if (noindex) {
+    reasons.push({ label: "Indexable", status: "bad", detail: "noindex — link passes no value" });
+  } else {
+    score += 20;
+    reasons.push({ label: "Indexable", status: "good" });
+  }
+
+  // 5) PBN / link-scheme red flag: strong DR but almost no real organic traffic
+  let spamRisk: "Low" | "Medium" | "High" = "Low";
+  const ratio = referringDomains != null && org > 0 ? referringDomains / org : null;
+  if (dr >= 40 && org < 500) {
+    spamRisk = "High";
+    score -= 24;
+    reasons.push({
+      label: "Spam / PBN risk",
+      status: "bad",
+      detail: "High authority but ~no organic traffic — likely a link farm/PBN",
+    });
+  } else if ((dr >= 30 && org < 2_000) || (ratio != null && ratio > 50)) {
+    spamRisk = "Medium";
+    score -= 8;
+    reasons.push({
+      label: "Spam / PBN risk",
+      status: "warn",
+      detail: "Authority looks high vs. its real traffic — verify manually",
+    });
+  } else {
+    reasons.push({ label: "Spam / PBN risk", status: "good", detail: "traffic matches authority" });
+  }
+
+  score = Math.round(clamp(score, 0, 100));
+  const verdict =
+    score >= 75 ? "Great buy" : score >= 55 ? "Good" : score >= 35 ? "Risky" : "Avoid";
+
+  return { score, verdict, spamRisk, reasons };
+}
+
 // ── Orchestrator ─────────────────────────────────────────────────────────────
 
 export async function getDomainInsights(
@@ -738,6 +838,16 @@ export async function getDomainInsights(
     onPageQuality: opq,
   });
 
+  // guest-post buying suitability
+  const guestPost = computeGuestPost({
+    da: metrics.da,
+    dr: metrics.dr,
+    organicVisits,
+    ageYears,
+    noindex: onPageSafe.noindex,
+    referringDomains: opr?.referringDomains ?? null,
+  });
+
   // ── SEO / trust health checks ──
   const checks: DomainInsights["checks"] = [
     { label: "Site reachable", ok: onPageSafe.reachable },
@@ -841,6 +951,7 @@ export async function getDomainInsights(
       ...onPageSafe,
       source: { label: "Live homepage fetch", estimate: false },
     },
+    guestPost,
     healthScore,
     checks,
     warnings,

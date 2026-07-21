@@ -4,7 +4,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import {
   Search, ArrowLeft, TrendingUp, Calendar, Link2, ShieldCheck, Server,
   Globe, CheckCircle, XCircle, AlertCircle, Download, Copy, Zap, Info,
-  Lock, Building2, FileText, ChevronDown,
+  Lock, Building2, FileText, ChevronDown, ShoppingBag, ExternalLink, AlertTriangle,
 } from "lucide-react";
 import Link from "next/link";
 import type { DomainInsights } from "@/lib/domain-insights";
@@ -163,6 +163,81 @@ function Pill({ ok, label }: { ok: boolean; label: string }) {
   );
 }
 
+/** Guest-post buying suitability card */
+function GuestPostCard({ gp }: { gp: DomainInsights["guestPost"] }) {
+  const color = scoreColor(gp.score);
+  const riskColor =
+    gp.spamRisk === "Low" ? "#16a34a" : gp.spamRisk === "Medium" ? "#c9a84c" : "#dc2626";
+  const icon = (s: string) =>
+    s === "good" ? <CheckCircle size={15} className="text-green-500 flex-shrink-0" />
+    : s === "warn" ? <AlertTriangle size={15} className="text-theme-gold flex-shrink-0" />
+    : <XCircle size={15} className="text-red-400 flex-shrink-0" />;
+  return (
+    <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} className="card-base p-6">
+      <div className="flex items-center gap-2.5 mb-4">
+        <ShieldCheck size={18} className="text-theme-gold" />
+        <h3 className="font-bold font-grotesk text-theme-text">Guest Post Suitability</h3>
+      </div>
+      <div className="flex items-center gap-5 mb-5">
+        <div className="text-center flex-shrink-0">
+          <div className="text-5xl font-bold font-grotesk leading-none" style={{ color }}>{gp.score}</div>
+          <div className="text-[10px] uppercase tracking-widest text-theme-muted mt-1">/ 100</div>
+        </div>
+        <div>
+          <div className="text-lg font-bold font-grotesk" style={{ color }}>{gp.verdict}</div>
+          <div className="text-xs text-theme-muted mt-0.5">
+            Spam / PBN risk: <span className="font-semibold" style={{ color: riskColor }}>{gp.spamRisk}</span>
+          </div>
+        </div>
+      </div>
+      <div className="space-y-1.5">
+        {gp.reasons.map((r) => (
+          <div key={r.label} className="flex items-center gap-2.5 py-1">
+            {icon(r.status)}
+            <span className="text-sm text-theme-text flex-1">{r.label}</span>
+            {r.detail && <span className="text-xs font-mono text-slate-400 text-right">{r.detail}</span>}
+          </div>
+        ))}
+      </div>
+    </motion.div>
+  );
+}
+
+/** Marketplace order-count check — links out to public listings (no fake numbers) */
+function MarketplaceCard({ domain }: { domain: string }) {
+  const q = encodeURIComponent(`${domain} guest post`);
+  const markets = [
+    { name: "Fiverr", url: `https://www.fiverr.com/search/gigs?query=${q}`, note: "gigs + orders in queue" },
+    { name: "Legiit", url: `https://legiit.com/search/${encodeURIComponent(domain)}`, note: "orders completed + reviews" },
+    { name: "Google Marketplaces", url: `https://www.google.com/search?q=${encodeURIComponent(`buy guest post on ${domain} price`)}`, note: "find sellers & pricing" },
+    { name: "Trustpilot", url: `https://www.trustpilot.com/search?query=${encodeURIComponent(domain)}`, note: "seller reviews" },
+  ];
+  return (
+    <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} className="card-base p-6">
+      <div className="flex items-center gap-2.5 mb-2">
+        <ShoppingBag size={18} className="text-theme-gold" />
+        <h3 className="font-bold font-grotesk text-theme-text">Marketplace / Order Check</h3>
+      </div>
+      <p className="text-xs text-theme-muted mb-4 leading-relaxed">
+        Actual order counts live only on the seller&rsquo;s marketplace page. Open these to see public
+        &ldquo;orders completed / in queue&rdquo; for this domain:
+      </p>
+      <div className="space-y-2">
+        {markets.map((m) => (
+          <a key={m.name} href={m.url} target="_blank" rel="noopener noreferrer"
+            className="flex items-center justify-between gap-3 p-3 rounded-xl border border-slate-200 hover:border-theme-gold hover:bg-slate-50 transition-colors group">
+            <div>
+              <div className="text-sm font-semibold text-theme-text group-hover:text-theme-gold">{m.name}</div>
+              <div className="text-xs text-theme-muted">{m.note}</div>
+            </div>
+            <ExternalLink size={15} className="text-slate-400 group-hover:text-theme-gold flex-shrink-0" />
+          </a>
+        ))}
+      </div>
+    </motion.div>
+  );
+}
+
 // ── page ─────────────────────────────────────────────────────────────────────
 
 export default function DomainInsightsPage() {
@@ -234,6 +309,8 @@ export default function DomainInsightsPage() {
       ["H2 Count", String(d.onPage.h2Count)],
       ["Word Count", String(d.onPage.wordCount)],
       ["Technologies", d.onPage.tech.join("; ") || "—"],
+      ["Guest Post Score", `${d.guestPost.score}/100 (${d.guestPost.verdict})`],
+      ["Spam / PBN Risk", d.guestPost.spamRisk],
       ["SEO Health (%)", String(d.healthScore)],
     ];
   }
@@ -425,6 +502,12 @@ export default function DomainInsightsPage() {
                 sub={data.domainInfo.createdAt ? `since ${new Date(data.domainInfo.createdAt).getFullYear()}` : "unknown"} />
               <Stat icon={<ShieldCheck size={15} />} label="SEO Health" value={`${data.healthScore}%`}
                 sub={`${data.checks.filter((c) => c.ok).length}/${data.checks.length} checks passed`} />
+            </div>
+
+            {/* ── Guest Post Suitability + Marketplaces ── */}
+            <div className="grid md:grid-cols-2 gap-6">
+              <GuestPostCard gp={data.guestPost} />
+              <MarketplaceCard domain={data.domain} />
             </div>
 
             {/* Detail cards */}
