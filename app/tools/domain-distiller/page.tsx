@@ -116,7 +116,7 @@ export default function DomainDistiller() {
 
         {/* Two-panel layout */}
         <div className="grid md:grid-cols-2 gap-6">
-          {/* Left — Input */}
+          {/* Left - Input */}
           <motion.div
             initial={{ opacity: 0, x: -20 }}
             animate={{ opacity: 1, x: 0 }}
@@ -169,7 +169,7 @@ export default function DomainDistiller() {
             </p>
           </motion.div>
 
-          {/* Right — Output */}
+          {/* Right - Output */}
           <motion.div
             initial={{ opacity: 0, x: 20 }}
             animate={{ opacity: 1, x: 0 }}

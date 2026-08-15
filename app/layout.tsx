@@ -4,7 +4,7 @@ import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
 
 export const metadata: Metadata = {
-  title: "ToolVerse Pro — Your Ultimate Digital Toolbox",
+  title: "ToolVerse Pro - Your Ultimate Digital Toolbox",
   description:
     "A futuristic suite of productivity tools: Email Utilization Checker, Global Phone Number Generator, Domain Distiller, and WebHarvest Pro. Built for professionals.",
   keywords: ["email checker", "phone number generator", "domain extractor", "web scraper", "productivity tools"],

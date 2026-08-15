@@ -256,7 +256,7 @@ export default function NumberGenerator() {
 
                     <div className="flex items-center justify-between bg-slate-50 border border-slate-200 rounded-lg p-2.5 group-hover:border-theme-gold group-hover:bg-yellow-50/30 transition-colors">
                       <span className={`text-sm font-mono tracking-wider ${isRolling ? "opacity-40" : ""} ${!num ? "text-slate-400" : "text-theme-text"}`}>
-                        {num || "— — ——————"}
+                        {num || "- - ------"}
                       </span>
                       <button
                         onClick={(e) => handleCopy(e, c.name, num)}

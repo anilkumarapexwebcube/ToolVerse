@@ -9,6 +9,7 @@ import {
 const tools = [
    {
     href:        "https://mailreplyai.vercel.app",
+    label:       "New",
     icon:        <Bot size={24} />,
     name:        "MailReply AI",
     tagline:     "Email & WhatsApp Web AI assistant",
@@ -21,8 +22,8 @@ const tools = [
     href:        "/tools/domain-insights",
     icon:        <Search size={24} />,
     name:        "Domain Insights",
-    tagline:     "DA/DR, traffic rank & SEO — free",
-    description: "Enter any domain to get authority score, global traffic rank, estimated visits, domain age, DNS, and a full on-page SEO health check — sourced from open datasets, no sign-up.",
+    tagline:     "DA/DR, traffic rank & SEO - free",
+    description: "Enter any domain to get authority score, global traffic rank, estimated visits, domain age, DNS, and a full on-page SEO health check - sourced from open datasets, no sign-up.",
     badge:       "NEW",
     features:    ["Authority & rank", "DNS + WHOIS", "On-page SEO audit"],
     comingSoon:  false,
@@ -114,7 +115,7 @@ export default function Home() {
             className="text-lg md:text-xl mb-12 max-w-2xl mx-auto leading-relaxed text-theme-muted"
           >
             Professional-grade utilities built for speed and precision.
-            100% client-side — your data never leaves your browser.
+            100% client-side - your data never leaves your browser.
           </motion.p>
 
           {/* CTA buttons */}
@@ -207,7 +208,7 @@ export default function Home() {
               All Tools
             </h2>
             <p className="text-lg text-theme-muted">
-              Pick a tool and start working — no sign-up, no tracking
+              Pick a tool and start working - no sign-up, no tracking
             </p>
           </motion.div>
 
@@ -226,6 +227,13 @@ export default function Home() {
                   <div className="absolute top-6 right-6 px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider bg-slate-100 text-slate-500 border border-slate-200">
                     COMING SOON
                   </div>
+                )}
+
+                {/* Label */}
+                {tool.label && (
+                  <span className="absolute top-4 right-4 px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider bg-theme-gold text-white">
+                    {tool.label}
+                  </span>
                 )}
 
                 {/* Icon */}

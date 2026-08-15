@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any -- this module parses untyped third-party JSON (RDAP, DoH, Open PageRank, Wayback) */
 /**
- * Domain Insights — free, transparent domain intelligence.
+ * Domain Insights - free, transparent domain intelligence.
  *
  * IMPORTANT (honesty): Ahrefs DR, Moz DA and SEMrush traffic are proprietary,
  * paid-only metrics. Nothing here scrapes or fakes those numbers. Instead we
@@ -113,7 +113,7 @@ export interface DomainInsights {
 
 // ── Small utilities ──────────────────────────────────────────────────────────
 
-/** fetch with a hard timeout; never throws — returns null on any failure */
+/** fetch with a hard timeout; never throws - returns null on any failure */
 async function safeFetch(
   url: string,
   opts: RequestInit & { timeoutMs?: number } = {}
@@ -556,11 +556,11 @@ function estimateAuthority(args: {
 }): number {
   const { rank, ageYears, https, reachable, hasSpf, onPageQualityHint } = args;
   let score = 0;
-  // popularity (up to 55 pts) — log scale over the top 1M
+  // popularity (up to 55 pts) - log scale over the top 1M
   if (rank && rank > 0) {
     score += clamp(55 * (1 - Math.log10(rank) / 6), 0, 55);
   }
-  // domain age (up to 20 pts) — 10y ≈ full
+  // domain age (up to 20 pts) - 10y ≈ full
   if (ageYears != null) score += clamp((ageYears / 10) * 20, 0, 20);
   // trust/tech signals (up to 25 pts)
   if (reachable) score += 6;
@@ -595,14 +595,14 @@ function computeMetrics(args: {
       ? clamp((Math.log10(referringDomains + 1) / 7) * 100, 0, 100) // 10M ref domains ≈ 100
       : null;
 
-  // DR — Ahrefs-style, link-graph weighted → Open PageRank is the closest free
+  // DR - Ahrefs-style, link-graph weighted → Open PageRank is the closest free
   // anchor (calibrated: OPR 9.5+ sites carry Ahrefs DR in the mid-90s).
   const drBase = refScore ?? clamp(0.7 * popScore + 0.3 * ageScore, 0, 100);
   const dr = Math.round(
     oprScore != null ? clamp(0.9 * oprScore + 0.1 * (refScore ?? oprScore), 0, 100) : drBase
   );
 
-  // DA — Moz-style blended authority (link graph + popularity + age + trust + on-page).
+  // DA - Moz-style blended authority (link graph + popularity + age + trust + on-page).
   const daBlend = clamp(
     0.4 * popScore +
       0.2 * ageScore +
@@ -614,7 +614,7 @@ function computeMetrics(args: {
   );
   const da = Math.round(oprScore != null ? 0.65 * oprScore + 0.35 * daBlend : daBlend);
 
-  // PA — Moz-style page authority for the homepage. Homepage PA typically tracks
+  // PA - Moz-style page authority for the homepage. Homepage PA typically tracks
   // a few points under DA for established sites, lifted by on-page quality.
   const pa = Math.round(clamp(0.8 * da + 0.15 * (onPageQuality * 100), 0, 100));
 
@@ -648,7 +648,7 @@ function computeGuestPost(args: {
   const reasons: GuestPostReason[] = [];
   let score = 0;
 
-  // 1) Authority — DR/DA (max 28)
+  // 1) Authority - DR/DA (max 28)
   const auth = (da + dr) / 2;
   score += clamp(auth * 0.28, 0, 28);
   reasons.push({
@@ -657,7 +657,7 @@ function computeGuestPost(args: {
     detail: `avg ${Math.round(auth)}/100`,
   });
 
-  // 2) Real organic audience — the metric that actually matters for guest posts (max 34)
+  // 2) Real organic audience - the metric that actually matters for guest posts (max 34)
   const org = organicVisits ?? 0;
   const orgPts = org >= 50_000 ? 34 : org >= 10_000 ? 26 : org >= 2_000 ? 16 : org >= 500 ? 8 : 2;
   score += orgPts;
@@ -676,9 +676,9 @@ function computeGuestPost(args: {
     detail: ageYears != null ? `${ageYears}y` : "unknown",
   });
 
-  // 4) Indexable (max 20) — a noindex site passes no SEO value
+  // 4) Indexable (max 20) - a noindex site passes no SEO value
   if (noindex) {
-    reasons.push({ label: "Indexable", status: "bad", detail: "noindex — link passes no value" });
+    reasons.push({ label: "Indexable", status: "bad", detail: "noindex - link passes no value" });
   } else {
     score += 20;
     reasons.push({ label: "Indexable", status: "good" });
@@ -693,7 +693,7 @@ function computeGuestPost(args: {
     reasons.push({
       label: "Spam / PBN risk",
       status: "bad",
-      detail: "High authority but ~no organic traffic — likely a link farm/PBN",
+      detail: "High authority but ~no organic traffic - likely a link farm/PBN",
     });
   } else if ((dr >= 30 && org < 2_000) || (ratio != null && ratio > 50)) {
     spamRisk = "Medium";
@@ -701,7 +701,7 @@ function computeGuestPost(args: {
     reasons.push({
       label: "Spam / PBN risk",
       status: "warn",
-      detail: "Authority looks high vs. its real traffic — verify manually",
+      detail: "Authority looks high vs. its real traffic - verify manually",
     });
   } else {
     reasons.push({ label: "Spam / PBN risk", status: "good", detail: "traffic matches authority" });

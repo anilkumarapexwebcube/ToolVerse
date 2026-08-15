@@ -108,7 +108,7 @@ export default function EmailChecker() {
     });
     setResultTab("unused");
     setActiveTab("results");
-    showToast(`Check complete — ${uniqueA.filter((e) => !setB.has(e)).length} unused found`);
+    showToast(`Check complete - ${uniqueA.filter((e) => !setB.has(e)).length} unused found`);
   }
 
   function handleCheck() {
@@ -299,7 +299,7 @@ export default function EmailChecker() {
 
               <div className="card-base p-6">
                 {cacheCount > 0
-                  ? <p className="text-xs mb-4 font-semibold font-grotesk text-theme-gold flex items-center gap-2"><CheckCircle size={14}/> {cacheCount} emails in cache — ready to compare</p>
+                  ? <p className="text-xs mb-4 font-semibold font-grotesk text-theme-gold flex items-center gap-2"><CheckCircle size={14}/> {cacheCount} emails in cache - ready to compare</p>
                   : <p className="text-xs mb-4 font-semibold font-grotesk text-red-500 flex items-center gap-2"><AlertCircle size={14}/> No emails cached yet. Save them in the Manage tab first.</p>
                 }
                 <textarea

@@ -12,17 +12,17 @@ import type { DomainInsights } from "@/lib/domain-insights";
 // ── helpers ──────────────────────────────────────────────────────────────────
 
 function fmtNum(n: number | null | undefined): string {
-  if (n == null) return "—";
+  if (n == null) return "-";
   if (n >= 1_000_000_000) return `${(n / 1_000_000_000).toFixed(1)}B`;
   if (n >= 1_000_000) return `${(n / 1_000_000).toFixed(1)}M`;
   if (n >= 1_000) return `${(n / 1_000).toFixed(1)}K`;
   return n.toLocaleString();
 }
 function fmtRank(n: number | null): string {
-  return n == null ? "—" : `#${n.toLocaleString()}`;
+  return n == null ? "-" : `#${n.toLocaleString()}`;
 }
 function fmtDate(s: string | null): string {
-  if (!s) return "—";
+  if (!s) return "-";
   const d = new Date(s);
   return Number.isNaN(d.getTime())
     ? s
@@ -149,7 +149,7 @@ function Row({ label, value }: { label: string; value: React.ReactNode }) {
   return (
     <div className="flex items-center justify-between gap-4 py-2.5">
       <dt className="text-sm text-theme-muted">{label}</dt>
-      <dd className="text-sm font-semibold text-theme-text text-right break-words max-w-[60%]">{value ?? "—"}</dd>
+      <dd className="text-sm font-semibold text-theme-text text-right break-words max-w-[60%]">{value ?? "-"}</dd>
     </div>
   );
 }
@@ -203,7 +203,7 @@ function GuestPostCard({ gp }: { gp: DomainInsights["guestPost"] }) {
   );
 }
 
-/** Marketplace order-count check — links out to public listings (no fake numbers) */
+/** Marketplace order-count check - links out to public listings (no fake numbers) */
 function MarketplaceCard({ domain }: { domain: string }) {
   const q = encodeURIComponent(`${domain} guest post`);
   const markets = [
@@ -273,7 +273,7 @@ export default function DomainInsightsPage() {
         showToast(`Analyzed ${json.domain}`);
       }
     } catch {
-      setError("Network error — please try again.");
+      setError("Network error - please try again.");
     } finally {
       setLoading(false);
     }
@@ -289,26 +289,26 @@ export default function DomainInsightsPage() {
       ["Traffic - Total (all channels)/mo", fmtNum(d.traffic.estimatedMonthlyVisits)],
       ["Traffic - Organic (search)/mo", fmtNum(d.traffic.organicVisits)],
       ["Organic Share (%)", String(d.traffic.organicSharePct)],
-      ["Global Rank", d.traffic.globalRank ? `#${d.traffic.globalRank}` : "—"],
+      ["Global Rank", d.traffic.globalRank ? `#${d.traffic.globalRank}` : "-"],
       ["Popularity Tier", d.traffic.tier],
-      ["Backlinks (Referring Domains)", d.authority.referringDomains != null ? String(d.authority.referringDomains) : "—"],
-      ["Open PageRank", d.authority.openPageRank != null ? String(d.authority.openPageRank) : "—"],
-      ["Domain Age (years)", d.domainInfo.ageYears != null ? String(d.domainInfo.ageYears) : "—"],
+      ["Backlinks (Referring Domains)", d.authority.referringDomains != null ? String(d.authority.referringDomains) : "-"],
+      ["Open PageRank", d.authority.openPageRank != null ? String(d.authority.openPageRank) : "-"],
+      ["Domain Age (years)", d.domainInfo.ageYears != null ? String(d.domainInfo.ageYears) : "-"],
       ["Created", fmtDate(d.domainInfo.createdAt)],
       ["Expires", fmtDate(d.domainInfo.expiresAt)],
-      ["Registrar", d.domainInfo.registrar || "—"],
-      ["IP Address", d.dns.ip || "—"],
-      ["Mail Provider", d.dns.mailProvider || "—"],
+      ["Registrar", d.domainInfo.registrar || "-"],
+      ["IP Address", d.dns.ip || "-"],
+      ["Mail Provider", d.dns.mailProvider || "-"],
       ["SPF", d.dns.hasSpf ? "Yes" : "No"],
       ["DMARC", d.dns.hasDmarc ? "Yes" : "No"],
       ["HTTPS", d.onPage.https ? "Yes" : "No"],
-      ["Load Time (ms)", d.onPage.responseMs != null ? String(d.onPage.responseMs) : "—"],
+      ["Load Time (ms)", d.onPage.responseMs != null ? String(d.onPage.responseMs) : "-"],
       ["Title Length", String(d.onPage.titleLength)],
       ["Meta Description Length", String(d.onPage.metaDescriptionLength)],
       ["H1 Count", String(d.onPage.h1Count)],
       ["H2 Count", String(d.onPage.h2Count)],
       ["Word Count", String(d.onPage.wordCount)],
-      ["Technologies", d.onPage.tech.join("; ") || "—"],
+      ["Technologies", d.onPage.tech.join("; ") || "-"],
       ["Guest Post Score", `${d.guestPost.score}/100 (${d.guestPost.verdict})`],
       ["Spam / PBN Risk", d.guestPost.spamRisk],
       ["SEO Health (%)", String(d.healthScore)],
@@ -325,7 +325,7 @@ export default function DomainInsightsPage() {
     const text = reportRows(data)
       .map(([k, v]) => `${k}: ${v}`)
       .join("\n");
-    navigator.clipboard.writeText(`Domain Insights — ${data.domain}\n\n${text}`);
+    navigator.clipboard.writeText(`Domain Insights - ${data.domain}\n\n${text}`);
     showToast("Metrics copied as text");
   }
 
@@ -360,7 +360,7 @@ export default function DomainInsightsPage() {
           </div>
           <div>
             <h1 className="text-3xl font-bold font-grotesk text-theme-text">Domain Insights</h1>
-            <p className="text-sm mt-1 text-theme-muted">Check any website&rsquo;s authority, traffic &amp; SEO — free</p>
+            <p className="text-sm mt-1 text-theme-muted">Check any website&rsquo;s authority, traffic &amp; SEO - free</p>
           </div>
         </motion.div>
 
@@ -371,7 +371,7 @@ export default function DomainInsightsPage() {
               <Globe size={18} className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400" />
               <input
                 className="input-base w-full pl-11 pr-4 py-3.5"
-                placeholder="Enter a domain — e.g. ahrefs.com"
+                placeholder="Enter a domain - e.g. ahrefs.com"
                 value={input}
                 onChange={(e) => setInput(e.target.value)}
                 onKeyDown={(e) => { if (e.key === "Enter") analyze(); }}
@@ -424,7 +424,7 @@ export default function DomainInsightsPage() {
             </div>
             <h3 className="font-bold font-grotesk text-theme-text text-lg mb-2">Analyze any domain, free</h3>
             <p className="text-sm text-theme-muted max-w-md mx-auto">
-              Authority, popularity rank, estimated traffic, domain age, DNS and a full SEO audit — in one click. No sign-up.
+              Authority, popularity rank, estimated traffic, domain age, DNS and a full SEO audit - in one click. No sign-up.
             </p>
             <div className="flex flex-wrap items-center justify-center gap-2 mt-5">
               {["ahrefs.com", "vercel.com", "wikipedia.org", "github.com"].map((d) => (
@@ -453,7 +453,7 @@ export default function DomainInsightsPage() {
                 <span className="badge"><Lock size={11} className={data.onPage.https ? "text-green-600" : "text-slate-400"} />
                   {data.onPage.https ? "Secure" : "No HTTPS"}</span>
                 <span className="badge"><Calendar size={11} className="text-theme-gold" />
-                  {data.domainInfo.ageYears != null ? `${data.domainInfo.ageYears}y` : "—"}</span>
+                  {data.domainInfo.ageYears != null ? `${data.domainInfo.ageYears}y` : "-"}</span>
                 <span className="badge"><ShieldCheck size={11} className="text-theme-gold" />
                   {data.healthScore}% health</span>
               </div>
@@ -495,10 +495,10 @@ export default function DomainInsightsPage() {
             <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
               <Stat icon={<TrendingUp size={15} />} label="Global Rank" value={fmtRank(data.traffic.globalRank)} sub={`${data.traffic.tier} popularity`} />
               <Stat icon={<Link2 size={15} />} label="Backlinks (ref. domains)"
-                value={data.authority.referringDomains != null ? fmtNum(data.authority.referringDomains) : "—"}
+                value={data.authority.referringDomains != null ? fmtNum(data.authority.referringDomains) : "-"}
                 sub={data.authority.configured ? "linking sites" : "needs free API key"} />
               <Stat icon={<Calendar size={15} />} label="Domain Age"
-                value={data.domainInfo.ageYears != null ? `${data.domainInfo.ageYears}y` : "—"}
+                value={data.domainInfo.ageYears != null ? `${data.domainInfo.ageYears}y` : "-"}
                 sub={data.domainInfo.createdAt ? `since ${new Date(data.domainInfo.createdAt).getFullYear()}` : "unknown"} />
               <Stat icon={<ShieldCheck size={15} />} label="SEO Health" value={`${data.healthScore}%`}
                 sub={`${data.checks.filter((c) => c.ok).length}/${data.checks.length} checks passed`} />
@@ -527,15 +527,15 @@ export default function DomainInsightsPage() {
                     <Pill ok={data.dns.hasSpf} label="SPF" />
                     <Pill ok={data.dns.hasDmarc} label="DMARC" />
                   </span>} />
-                <Row label="Nameserver" value={data.dns.nameservers[0]?.replace(/\.$/, "") || "—"} />
+                <Row label="Nameserver" value={data.dns.nameservers[0]?.replace(/\.$/, "") || "-"} />
               </InfoCard>
 
               <InfoCard icon={<FileText size={18} />} title="Content & Speed">
                 <Row label="Page title" value={data.onPage.title ? `${data.onPage.titleLength} chars` : "missing"} />
                 <Row label="Meta description" value={data.onPage.metaDescription ? `${data.onPage.metaDescriptionLength} chars` : "missing"} />
                 <Row label="Headings" value={`${data.onPage.h1Count} × H1 · ${data.onPage.h2Count} × H2`} />
-                <Row label="Words on page" value={data.onPage.wordCount ? fmtNum(data.onPage.wordCount) : "—"} />
-                <Row label="Load time" value={data.onPage.responseMs != null ? `${data.onPage.responseMs} ms` : "—"} />
+                <Row label="Words on page" value={data.onPage.wordCount ? fmtNum(data.onPage.wordCount) : "-"} />
+                <Row label="Load time" value={data.onPage.responseMs != null ? `${data.onPage.responseMs} ms` : "-"} />
               </InfoCard>
 
               <InfoCard icon={<Zap size={18} />} title="Technology">
@@ -588,16 +588,16 @@ export default function DomainInsightsPage() {
               </AnimatePresence>
             </motion.div>
 
-            {/* Honesty note — single subtle line */}
+            {/* Honesty note - single subtle line */}
             <p className="flex items-start gap-2 text-xs text-theme-muted leading-relaxed px-1">
               <Info size={13} className="text-theme-gold flex-shrink-0 mt-0.5" />
               <span>
                 <strong className="text-theme-text">DA, PA, DR &amp; Traffic are estimates</strong> from open data
                 (Open PageRank, Tranco, RDAP, Cloudflare DNS &amp; the Internet Archive). Moz DA/PA and Ahrefs DR are
-                proprietary paid metrics — no free API returns those exact numbers, so these approximate them and are
+                proprietary paid metrics - no free API returns those exact numbers, so these approximate them and are
                 marked <span className="font-semibold text-theme-gold">EST</span>.{" "}
                 <strong className="text-theme-text">Traffic here = total visits (all channels), SimilarWeb-style.</strong>{" "}
-                Ahrefs&rsquo; &ldquo;Organic traffic&rdquo; counts Google-search visits only, so it is normally much lower —
+                Ahrefs&rsquo; &ldquo;Organic traffic&rdquo; counts Google-search visits only, so it is normally much lower -
                 the two are not directly comparable.
                 {data.warnings.length > 0 && <> Some sources were unavailable: {data.warnings.join(", ")}.</>}
               </span>

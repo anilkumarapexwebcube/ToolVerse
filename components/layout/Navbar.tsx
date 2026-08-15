@@ -6,12 +6,12 @@ import { Zap, Menu, X } from "lucide-react";
 import { useState } from "react";
 
 const navLinks = [
-  { href: "https://mailreplyai.vercel.app", label: "MailReply AI" },
+  { href: "https://mailreplyai.vercel.app", label: "MailReply AI", badge: "New" },
   { href: "/tools/domain-insights", label: "Domain Insights" },
-  { href: "/tools/email-checker",   label: "Email Checker" },
+  { href: "/tools/email-checker", label: "Email Checker" },
   { href: "/tools/number-generator", label: "Numbers" },
   { href: "/tools/domain-distiller", label: "Domains" },
-  { href: "/tools/qr-generator",     label: "QR" },
+  { href: "/tools/qr-generator", label: "QR" },
 ];
 
 export default function Navbar() {
@@ -26,7 +26,7 @@ export default function Navbar() {
           <motion.div
             className="flex items-center justify-center"
           >
-            <img src="/logo.png" alt="Logo" className="h-10 w-10 rounded-xl"/>
+            <img src="/logo.png" alt="Logo" className="h-10 w-10 rounded-xl" />
           </motion.div>
           <span className="text-xl font-bold tracking-tight font-grotesk text-theme-text">
             Tool<span className="text-theme-gold">Verse</span>{" "}
@@ -37,29 +37,50 @@ export default function Navbar() {
         </Link>
 
         {/* Desktop Links */}
-        <div className="hidden lg:flex items-center gap-1">
+        <div className="hidden items-center gap-2 lg:flex">
           {navLinks.map((l) => {
             const active = pathname === l.href;
+            const isExternal = /^https?:\/\//.test(l.href);
+
             return (
-              <Link key={l.href} href={l.href}>
-                <motion.span
-                  whileHover={{ y: -2 }}
-                  className={`px-4 py-2 rounded-xl text-sm font-semibold transition-all cursor-pointer inline-block font-grotesk ${
-                    active
-                      ? "bg-theme-gold/10 text-theme-gold border border-theme-gold/20"
-                      : "text-theme-muted hover:text-theme-text hover:bg-slate-50 border border-transparent"
-                  }`}
+              <div key={l.href} className="group relative">
+                {l.badge && (
+                  <motion.span
+                    initial={{ scale: 0.9, opacity: 0.8 }}
+                    animate={{ scale: [1, 1.12, 1], opacity: [0.9, 1, 0.9] }}
+                    transition={{ duration: 1.8, repeat: Infinity, ease: "easeInOut" }}
+                    className="absolute -right-1 -top-2 z-10 rounded-full border border-red-500/30 bg-red-500 px-2 py-0.5 text-[8px] font-black uppercase tracking-[0.18em] text-white shadow-sm shadow-red-500/20"
+                  >
+                    {l.badge}
+                  </motion.span>
+                )}
+
+                <Link
+                  href={l.href}
+                  target={isExternal ? "_blank" : undefined}
+                  rel={isExternal ? "noopener noreferrer" : undefined}
+                  onClick={() => setOpen(false)}
+                  aria-current={active ? "page" : undefined}
                 >
-                  {l.label}
-                </motion.span>
-              </Link>
+                  <motion.span
+                    whileHover={{ y: -2, scale: 1.01 }}
+                    whileTap={{ scale: 0.98 }}
+                    className={`inline-flex items-center rounded-xl border px-4 py-2.5 text-sm font-semibold transition-all duration-200 ${active
+                        ? "border-amber-200 bg-amber-50 text-amber-700 shadow-sm"
+                        : "border-transparent text-slate-600 hover:border-slate-200 hover:bg-slate-50 hover:text-slate-900"
+                      }`}
+                  >
+                    {l.label}
+                  </motion.span>
+                </Link>
+              </div>
             );
           })}
         </div>
 
         {/* Mobile burger */}
         <button
-          className="lg:hidden p-2 text-theme-text hover:bg-slate-100 rounded-lg transition-colors"
+          className="rounded-lg p-2 text-slate-700 transition-colors hover:bg-slate-100 lg:hidden"
           onClick={() => setOpen(!open)}
           aria-label="Toggle menu"
         >
@@ -73,22 +94,42 @@ export default function Navbar() {
           initial={{ opacity: 0, y: -10 }}
           animate={{ opacity: 1, y: 0 }}
           exit={{ opacity: 0, y: -10 }}
-          className="lg:hidden px-6 pb-4 flex flex-col gap-2 bg-white border-b border-theme-border"
+          className="border-t border-slate-200 bg-white/90 px-6 pb-4 pt-3 lg:hidden"
         >
           {navLinks.map((l) => {
             const active = pathname === l.href;
+            const isExternal = /^https?:\/\//.test(l.href);
+
             return (
-              <Link key={l.href} href={l.href} onClick={() => setOpen(false)}>
-                <span
-                  className={`block px-4 py-3 rounded-xl text-sm font-semibold font-grotesk ${
-                    active
-                      ? "bg-theme-gold/10 text-theme-gold border border-theme-gold/20"
-                      : "text-theme-muted hover:text-theme-text hover:bg-slate-50 border border-transparent"
-                  }`}
+              <div key={`${l.href}-mobile`} className="relative">
+                {l.badge && (
+                  <motion.span
+                    initial={{ scale: 0.9, opacity: 0.8 }}
+                    animate={{ scale: [1, 1.12, 1], opacity: [0.9, 1, 0.9] }}
+                    transition={{ duration: 1.8, repeat: Infinity, ease: "easeInOut" }}
+                    className="absolute right-3.5 top-3.5 rounded-full border border-red-500/30 bg-red-500 px-2 py-0.5 text-[8px] font-black uppercase tracking-[0.18em] text-white"
+                  >
+                    {l.badge}
+                  </motion.span>
+                )}
+
+                <Link
+                  href={l.href}
+                  target={isExternal ? "_blank" : undefined}
+                  rel={isExternal ? "noopener noreferrer" : undefined}
+                  onClick={() => setOpen(false)}
+                  aria-current={active ? "page" : undefined}
                 >
-                  {l.label}
-                </span>
-              </Link>
+                  <span
+                    className={`block rounded-xl border px-4 py-3 text-sm font-semibold transition-colors ${active
+                        ? "border-amber-200 bg-amber-50 text-amber-700"
+                        : "border-transparent text-slate-600 hover:bg-slate-50 hover:text-slate-900"
+                      }`}
+                  >
+                    {l.label}
+                  </span>
+                </Link>
+              </div>
             );
           })}
         </motion.div>
