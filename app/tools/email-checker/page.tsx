@@ -4,8 +4,14 @@ import { motion, AnimatePresence } from "framer-motion";
 import {
   Mail, Save, Upload, Trash2, Zap, Copy, CheckCircle,
   AlertCircle, Database, Users, XCircle, BarChart2, ArrowLeft,
+  Download, Puzzle, ExternalLink,
 } from "lucide-react";
 import Link from "next/link";
+
+// Chrome extension shared on Google Drive
+const EXT_FILE_ID = "1WswMe4lTnzXZ00uM0kuQ_arqLyWQMebm";
+const EXT_DOWNLOAD_URL = `https://drive.google.com/uc?export=download&id=${EXT_FILE_ID}`;
+const EXT_VIEW_URL = `https://drive.google.com/file/d/${EXT_FILE_ID}/view?usp=sharing`;
 
 // ── Helpers ──────────────────────────────────────────────
 function parseEmails(raw: string): string[] {
@@ -165,6 +171,76 @@ export default function EmailChecker() {
             <p className="text-sm mt-1 text-theme-muted">
               Compare email lists · Find unused addresses · Detect duplicates
             </p>
+          </div>
+        </motion.div>
+
+        {/* ── Chrome Extension banner ── */}
+        <motion.div
+          initial={{ opacity: 0, y: 12 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.05 }}
+          className="card-base p-6 mb-6 relative overflow-hidden"
+        >
+          <div className="absolute inset-0 bg-gradient-gold opacity-[0.04] pointer-events-none" />
+          <div className="flex flex-col md:flex-row md:items-center gap-5 relative">
+            <div className="w-14 h-14 rounded-2xl flex items-center justify-center flex-shrink-0 bg-gradient-gold text-white shadow-md shadow-theme-gold/20">
+              <Puzzle size={26} />
+            </div>
+
+            <div className="flex-1">
+              <div className="flex items-center gap-2 mb-1 flex-wrap">
+                <h2 className="text-lg font-bold font-grotesk text-theme-text">
+                  Email Checker — Browser Extension
+                </h2>
+                <span className="badge !bg-theme-gold/10 !text-theme-gold !border-theme-gold/20">
+                  Chrome / Edge
+                </span>
+              </div>
+              <p className="text-sm text-theme-muted leading-relaxed max-w-2xl">
+                Prefer working right inside your inbox? Install our lightweight browser extension to run
+                email-utilization checks on the fly — compare master vs. utilized lists, spot unused
+                addresses and duplicates, and copy clean results in one click. Same engine as this tool,
+                no manual paste needed.
+              </p>
+            </div>
+
+            <div className="flex flex-col gap-2 flex-shrink-0 w-full md:w-auto">
+              <a
+                href={EXT_DOWNLOAD_URL}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="btn-primary px-6 py-3 text-sm flex items-center justify-center gap-2 whitespace-nowrap"
+              >
+                <Download size={16} /> Download Extension
+              </a>
+              <a
+                href={EXT_VIEW_URL}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-xs text-theme-muted hover:text-theme-gold flex items-center justify-center gap-1 transition-colors"
+              >
+                <ExternalLink size={11} /> View on Google Drive
+              </a>
+            </div>
+          </div>
+
+          {/* quick install steps */}
+          <div className="mt-5 pt-5 border-t border-slate-100 grid sm:grid-cols-3 gap-4 relative">
+            {[
+              { n: "1", t: "Download & unzip", d: "Grab the file above and extract the folder." },
+              { n: "2", t: "Open extensions", d: "Go to chrome://extensions and enable Developer mode." },
+              { n: "3", t: "Load unpacked", d: "Click “Load unpacked” and select the extracted folder." },
+            ].map((s) => (
+              <div key={s.n} className="flex items-start gap-3">
+                <span className="w-6 h-6 rounded-full bg-theme-gold/10 text-theme-gold text-xs font-bold flex items-center justify-center flex-shrink-0 font-grotesk">
+                  {s.n}
+                </span>
+                <div>
+                  <div className="text-sm font-semibold text-theme-text font-grotesk">{s.t}</div>
+                  <div className="text-xs text-theme-muted leading-snug">{s.d}</div>
+                </div>
+              </div>
+            ))}
           </div>
         </motion.div>
 

@@ -7,11 +7,11 @@ import { useState } from "react";
 
 const navLinks = [
   { href: "https://mailreplyai.vercel.app", label: "MailReply AI", badge: "New" },
+  { href: "/tools/gsc-crawl-check", label: "GSC Crawl", badge: "New" },
   { href: "/tools/domain-insights", label: "Domain Insights" },
   { href: "/tools/email-checker", label: "Email Checker" },
   { href: "/tools/number-generator", label: "Numbers" },
   { href: "/tools/domain-distiller", label: "Domains" },
-  { href: "/tools/qr-generator", label: "QR" },
 ];
 
 export default function Navbar() {

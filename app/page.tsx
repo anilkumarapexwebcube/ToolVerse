@@ -3,8 +3,12 @@ import { motion } from "framer-motion";
 import Link from "next/link";
 import {
   Mail, Globe, Filter, Cpu, ArrowRight, Zap,
-  CheckCircle, Shield, Layers, Star, Link as LinkIcon, QrCode, Search, Bot
+  CheckCircle, Shield, Layers, Star, Link as LinkIcon, Monitor, Search, Bot, Download, CalendarClock
 } from "lucide-react";
+
+// SearchOps Studio desktop installer (Dropbox direct download — dl=1 avoids the Dropbox page)
+const SEO_TOOLKIT_EXE_URL =
+  "https://www.dropbox.com/scl/fi/roxfrnovvonqvj5z9cy8z/SearchOps-Studio-Setup-1.2.3.exe?rlkey=98vde78gl9y5ew33tvh2qv4w0&st=qiw3nrzz&dl=0";
 
 const tools = [
    {
@@ -17,6 +21,30 @@ const tools = [
     badge:       "NEW",
     features:    ["AI-powered replies", "Real-time processing", "Supports Email & WhatsApp Web"],
     comingSoon:  false,
+  },
+  {
+    href:        "/tools/gsc-crawl-check",
+    label:       "New",
+    icon:        <CalendarClock size={24} />,
+    name:        "GSC Last Crawl Checker",
+    tagline:     "Bulk last Google crawl date & index status",
+    description: "Paste up to 100 URLs and pull each page's last Google Search Console crawl date and index status live, with pause/resume controls and CSV export.",
+    badge:       "NEW",
+    features:    ["Up to 100 URLs", "Live crawl dates", "CSV export"],
+    comingSoon:  false,
+  },
+  {
+    href:        SEO_TOOLKIT_EXE_URL,
+    label:       "New",
+    icon:        <Monitor size={24} />,
+    name:        "SearchOps Studio",
+    tagline:     "All-in-one SEO desktop app for Windows",
+    description: "A powerful desktop toolkit for SEO pros — bulk domain metrics, on-page audits, keyword & rank utilities, and reports, all running natively on your PC. Download the installer and run it locally.",
+    badge:       "NEW",
+    features:    ["Windows .exe installer", "Runs 100% on your PC", "Bulk & batch processing"],
+    comingSoon:  false,
+    download:    true,
+    cta:         "Download for Windows",
   },
   {
     href:        "/tools/domain-insights",
@@ -57,17 +85,7 @@ const tools = [
     badge:       "LIVE",
     features:    ["Regex engine", "Deduplication", "Download .txt"],
     comingSoon:  false,
-  },
-  {
-    href:        "/tools/qr-generator",
-    icon:        <QrCode size={24} />,
-    name:        "QR Code Generator",
-    tagline:     "High-res QR codes instantly",
-    description: "Generate customized, print-ready QR codes for URLs, text, or contacts. Adjust colors and download as PNG without limits.",
-    badge:       "NEW",
-    features:    ["High-res PNG export", "Custom colors", "100% offline"],
-    comingSoon:  false,
-  }
+  }  
 ];
 
 const stats = [
@@ -154,7 +172,7 @@ export default function Home() {
             { icon: <Globe size={22} />, delay: 0.4 },
             { icon: <Filter size={22} />, delay: 0.8 },
             { icon: <LinkIcon size={22} />, delay: 1.2 },
-            { icon: <QrCode size={22} />, delay: 1.6 },
+            { icon: <Monitor size={22} />, delay: 1.6 },
             { icon: <Cpu size={22} />, delay: 2 },
           ].map((item, i) => (
             <motion.div
@@ -220,7 +238,7 @@ export default function Home() {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ duration: 0.5, delay: i * 0.1 }}
-                className="relative p-8 rounded-3xl cursor-pointer group card-base card-hover"
+                className="relative p-8 rounded-3xl cursor-auto group card-base card-hover"
               >
                 {/* Coming Soon Ribbon */}
                 {tool.comingSoon && (
@@ -263,19 +281,28 @@ export default function Home() {
                 </div>
 
                 {/* CTA */}
-                <Link href={tool.href}>
-                  <button
-                    className={`flex items-center gap-2 px-5 py-2.5 rounded-xl text-sm font-bold w-full sm:w-auto justify-center transition-all ${
-                      tool.comingSoon
-                        ? "bg-slate-50 text-slate-400 border border-slate-200 cursor-not-allowed"
-                        : "bg-theme-gold text-white hover:bg-[#a5883a] shadow-md hover:shadow-lg hover:-translate-y-0.5"
-                    }`}
-                    disabled={tool.comingSoon}
-                  >
-                    {tool.comingSoon ? "Preview Coming Soon" : "Launch Tool"}
-                    <ArrowRight size={15} />
-                  </button>
-                </Link>
+                {tool.download ? (
+                  <a href={tool.href} download>
+                    <button className="flex items-center gap-2 px-5 py-2.5 rounded-xl text-sm font-bold w-full sm:w-auto justify-center transition-all bg-theme-gold text-white hover:bg-[#a5883a] shadow-md hover:shadow-lg hover:-translate-y-0.5">
+                      {tool.cta ?? "Download"}
+                      <Download size={15} />
+                    </button>
+                  </a>
+                ) : (
+                  <Link href={tool.href}>
+                    <button
+                      className={`flex items-center gap-2 px-5 py-2.5 rounded-xl text-sm font-bold w-full sm:w-auto justify-center transition-all ${
+                        tool.comingSoon
+                          ? "bg-slate-50 text-slate-400 border border-slate-200 cursor-not-allowed"
+                          : "bg-theme-gold text-white hover:bg-[#a5883a] shadow-md hover:shadow-lg hover:-translate-y-0.5"
+                      }`}
+                      disabled={tool.comingSoon}
+                    >
+                      {tool.comingSoon ? "Preview Coming Soon" : "Launch Tool"}
+                      <ArrowRight size={15} />
+                    </button>
+                  </Link>
+                )}
               </motion.div>
             ))}
           </div>
