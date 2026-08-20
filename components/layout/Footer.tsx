@@ -1,10 +1,12 @@
 "use client";
 import Link from "next/link";
-import { Heart, ArrowUpRight, Download, Shield, Ban, Lock, Monitor } from "lucide-react";
+import { Heart, ArrowUpRight, Download, Shield, Ban, Lock, Monitor, Radar } from "lucide-react";
 import { motion } from "framer-motion";
 
 const SEO_TOOLKIT_EXE_URL =
-  "https://www.dropbox.com/scl/fi/bwpmxs15lqxdio5s9i98l/SEOToolkitPro_Setup.exe?rlkey=rfebq4uud475epz0y8265zoyk&dl=1";
+  "https://www.dropbox.com/scl/fi/roxfrnovvonqvj5z9cy8z/SearchOps-Studio-Setup-1.2.3.exe?rlkey=98vde78gl9y5ew33tvh2qv4w0&st=pmg98si2&dl=1";
+const RANK_RADAR_EXE_URL =
+  "https://www.dropbox.com/scl/fi/5sxksq5swpvhm7a14kjr3/RankRadar.exe?rlkey=zjalmw3ljlmxzzvvzehn5mk84&st=ffek5bay&dl=1";
 
 const columns: {
   title: string;
@@ -70,7 +72,7 @@ export default function Footer() {
               <h4 className="text-xs font-bold uppercase tracking-widest font-grotesk text-theme-text mb-4">{col.title}</h4>
               <ul className="space-y-2.5">
                 {col.links.map((l) => (
-                  <li key={l.href}>
+                  <li key={`${col.title}-${l.href}`}>
                     <Link
                       href={l.href}
                       {...(l.external ? { target: "_blank", rel: "noopener noreferrer" } : {})}
@@ -107,7 +109,6 @@ export default function Footer() {
               </p>
               <motion.a
                 href={SEO_TOOLKIT_EXE_URL}
-                target="_blank"
                 rel="noopener noreferrer"
                 whileHover={{ y: -2 }}
                 whileTap={{ scale: 0.97 }}
@@ -115,6 +116,30 @@ export default function Footer() {
               >
                 <Download size={14} /> Download for Windows
               </motion.a>
+
+              <div className="mt-4 pt-4 border-t border-slate-200">
+                <div className="flex items-center gap-2 mb-2">
+                  <span className="w-9 h-9 rounded-xl flex items-center justify-center bg-gradient-gold text-white shadow-sm">
+                    <Radar size={17} />
+                  </span>
+                  <div>
+                    <div className="text-sm font-bold font-grotesk text-theme-text leading-tight">Rank Radar</div>
+                    <div className="text-[11px] text-theme-muted">Google rank tracker · Windows</div>
+                  </div>
+                </div>
+                <p className="text-xs text-theme-muted leading-relaxed mb-4">
+                  Track city-level Google rankings with organic-only results.
+                </p>
+                <motion.a
+                  href={RANK_RADAR_EXE_URL}
+                  rel="noopener noreferrer"
+                  whileHover={{ y: -2 }}
+                  whileTap={{ scale: 0.97 }}
+                  className="btn-primary w-full px-4 py-2.5 text-xs flex items-center justify-center gap-2"
+                >
+                  <Download size={14} /> Download for Windows
+                </motion.a>
+              </div>
             </div>
           </div>
         </div>

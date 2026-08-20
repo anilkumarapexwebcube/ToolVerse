@@ -3,12 +3,14 @@ import { motion } from "framer-motion";
 import Link from "next/link";
 import {
   Mail, Globe, Filter, Cpu, ArrowRight, Zap,
-  CheckCircle, Shield, Layers, Star, Link as LinkIcon, Monitor, Search, Bot, Download, CalendarClock
+  CheckCircle, Shield, Layers, Star, Link as LinkIcon, Monitor, Search, Bot, Download, CalendarClock, Radar
 } from "lucide-react";
 
 // SearchOps Studio desktop installer (Dropbox direct download — dl=1 avoids the Dropbox page)
 const SEO_TOOLKIT_EXE_URL =
-  "https://www.dropbox.com/scl/fi/roxfrnovvonqvj5z9cy8z/SearchOps-Studio-Setup-1.2.3.exe?rlkey=98vde78gl9y5ew33tvh2qv4w0&st=qiw3nrzz&dl=0";
+  "https://www.dropbox.com/scl/fi/roxfrnovvonqvj5z9cy8z/SearchOps-Studio-Setup-1.2.3.exe?rlkey=98vde78gl9y5ew33tvh2qv4w0&st=pmg98si2&dl=1";
+const RANK_RADAR_EXE_URL =
+  "https://www.dropbox.com/scl/fi/5sxksq5swpvhm7a14kjr3/RankRadar.exe?rlkey=zjalmw3ljlmxzzvvzehn5mk84&st=tlyzqddk&dl=1";
 
 const tools = [
    {
@@ -42,6 +44,19 @@ const tools = [
     description: "A powerful desktop toolkit for SEO pros — bulk domain metrics, on-page audits, keyword & rank utilities, and reports, all running natively on your PC. Download the installer and run it locally.",
     badge:       "NEW",
     features:    ["Windows .exe installer", "Runs 100% on your PC", "Bulk & batch processing"],
+    comingSoon:  false,
+    download:    true,
+    cta:         "Download for Windows",
+  },
+  {
+    href:        RANK_RADAR_EXE_URL,
+    label:       "New",
+    icon:        <Radar size={24} />,
+    name:        "Rank Radar",
+    tagline:     "Google rank tracker desktop app",
+    description: "Track true Google rankings with city-level positions, personalization off, and organic-only results, exactly as a real searcher sees them.",
+    badge:       "NEW",
+    features:    ["City-level rankings", "Personalization off", "Windows .exe installer"],
     comingSoon:  false,
     download:    true,
     cta:         "Download for Windows",
