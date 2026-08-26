@@ -104,7 +104,7 @@ const tools = [
 ];
 
 const stats = [
-  { value: "6", label: "Precision Tools", icon: <Layers size={20} /> },
+  { value: "8", label: "Precision Tools", icon: <Layers size={20} /> },
   { value: "60+", label: "Countries Supported", icon: <Globe size={20} /> },
   { value: "100%", label: "Client-Side Privacy", icon: <Shield size={20} /> },
   { value: "0ms", label: "Server Latency", icon: <Zap size={20} /> },
