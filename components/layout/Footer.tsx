@@ -17,6 +17,7 @@ const columns: {
     links: [
       { href: "/tools/domain-insights", label: "Domain Insights", badge: "NEW" },
       { href: "/tools/gsc-crawl-check", label: "GSC Crawl Checker", badge: "NEW" },
+      { href: "/tools/ranking-report-filter", label: "Ranking Report Filter", badge: "NEW" },
       { href: "/tools/domain-distiller", label: "Domain Distiller" },
     ],
   },

@@ -3,7 +3,7 @@ import { motion } from "framer-motion";
 import Link from "next/link";
 import {
   Mail, Globe, Filter, Cpu, ArrowRight, Zap,
-  CheckCircle, Shield, Layers, Star, Link as LinkIcon, Monitor, Search, Bot, Download, CalendarClock, Radar
+  CheckCircle, Shield, Layers, Star, Link as LinkIcon, Monitor, Search, Bot, Download, CalendarClock, Radar, FileSpreadsheet
 } from "lucide-react";
 
 // SearchOps Studio desktop installer (Dropbox direct download — dl=1 avoids the Dropbox page)
@@ -100,7 +100,17 @@ const tools = [
     badge:       "LIVE",
     features:    ["Regex engine", "Deduplication", "Download .txt"],
     comingSoon:  false,
-  }  
+  },
+  {
+    href:        "/tools/ranking-report-filter",
+    icon:        <FileSpreadsheet size={24} />,
+    name:        "Ranking Report Filter",
+    tagline:     "Excel macro to clean rank-tracking exports",
+    description: "A ready-to-use VBA macro that filters a keyword ranking report — keeps improved and stable positions, drops worsened and non-ranking rows. Copy or download the .bas.",
+    badge:       "NEW",
+    features:    ["One-click VBA macro", "Copy or .bas download", "Keeps only gains"],
+    comingSoon:  false,
+  }
 ];
 
 const stats = [
