@@ -103,6 +103,7 @@ const tools = [
   },
   {
     href:        "/tools/ranking-report-filter",
+    label:       "New",
     icon:        <FileSpreadsheet size={24} />,
     name:        "Ranking Report Filter",
     tagline:     "Excel macro to clean rank-tracking exports",
