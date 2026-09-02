@@ -73,7 +73,7 @@ function rnd(n: number) { return Math.floor(Math.random() * n); }
 
 function generateNumberString(country: typeof COUNTRIES[0]): string {
   const len = country.digits[1];
-  let digits = Array.from({ length: len }, () => rnd(10));
+  const digits = Array.from({ length: len }, () => rnd(10));
   digits[0] = parseInt(country.digits[0].toString()[0]);
   if (digits[0] === 0) digits[0] = 1 + rnd(9);
   const raw = digits.join('');
@@ -119,7 +119,7 @@ export default function NumberGenerator() {
     setRolling((p) => ({ ...p, [countryName]: true }));
     const timer = setInterval(() => {
       setNumbers((p) => {
-        let temp = finalVal.split("").map(c => /\d/.test(c) ? rnd(10).toString() : c).join("");
+        const temp = finalVal.split("").map(c => /\d/.test(c) ? rnd(10).toString() : c).join("");
         return { ...p, [countryName]: temp };
       });
       count++;
@@ -221,7 +221,7 @@ export default function NumberGenerator() {
                 className="col-span-full py-20 text-center text-theme-muted"
               >
                 <Globe size={48} className="mx-auto mb-4 opacity-20" />
-                <p className="text-lg font-grotesk">No countries found for "{search}"</p>
+                <p className="text-lg font-grotesk">No countries found for &ldquo;{search}&rdquo;</p>
               </motion.div>
             ) : (
               filtered.map((c, i) => {

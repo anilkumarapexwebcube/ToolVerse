@@ -49,7 +49,7 @@ export default function WebHarvestProComingSoon() {
             WebHarvest Pro
           </h1>
           <p className="text-lg text-theme-muted max-w-xl mx-auto mb-10 leading-relaxed">
-            The ultimate AI-powered multi-site scraper generator. Configure your target URLs and data selectors, and we'll generate a production-ready Node.js scraping project.
+            The ultimate AI-powered multi-site scraper generator. Configure your target URLs and data selectors, and we&rsquo;ll generate a production-ready Node.js scraping project.
           </p>
         </motion.div>
 

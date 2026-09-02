@@ -2,13 +2,13 @@
 import { motion } from "framer-motion";
 import Link from "next/link";
 import {
-  Mail, Globe, Filter, Cpu, ArrowRight, Zap,
-  CheckCircle, Shield, Layers, Star, Link as LinkIcon, Monitor, Search, Bot, Download, CalendarClock, Radar, FileSpreadsheet
+  Mail, Globe, Filter, ArrowRight, ArrowUpRight, CheckCircle,
+  Monitor, Search, Bot, Download, CalendarClock, Radar, FileSpreadsheet
 } from "lucide-react";
 
 // SearchOps Studio desktop installer (Dropbox direct download — dl=1 avoids the Dropbox page)
 const SEO_TOOLKIT_EXE_URL =
-  "https://www.dropbox.com/scl/fi/roxfrnovvonqvj5z9cy8z/SearchOps-Studio-Setup-1.2.3.exe?rlkey=98vde78gl9y5ew33tvh2qv4w0&st=pmg98si2&dl=1";
+  "https://www.dropbox.com/scl/fi/rketviou0i4pbt6ho7rr8/SearchOps-Studio-Setup-1.6.0.exe?rlkey=igid6mwyvq0cn5m705cg5nuv6&st=ycak0hi6&dl=1";
 const RANK_RADAR_EXE_URL =
   "https://www.dropbox.com/scl/fi/5sxksq5swpvhm7a14kjr3/RankRadar.exe?rlkey=zjalmw3ljlmxzzvvzehn5mk84&st=tlyzqddk&dl=1";
 
@@ -114,223 +114,224 @@ const tools = [
   }
 ];
 
-const stats = [
-  { value: "9", label: "Precision Tools", icon: <Layers size={20} /> },
-  { value: "60+", label: "Countries Supported", icon: <Globe size={20} /> },
-  { value: "100%", label: "Client-Side Privacy", icon: <Shield size={20} /> },
-  { value: "0ms", label: "Server Latency", icon: <Zap size={20} /> },
+const readouts = [
+  { n: String(tools.length), l: "tools in the suite" },
+  { n: "0", l: "sign-ups required" },
+  { n: "100%", l: "free · no tracking" },
 ];
+
+function toolKind(t: (typeof tools)[number]) {
+  if (t.download) return { label: "Windows app", dot: "#c9a84c" };
+  if (/^https?:\/\//.test(t.href)) return { label: "External", dot: "#37506c" };
+  return { label: "Web tool", dot: "#16a34a" };
+}
+
+/* radar-sweep console motif — the one orchestrated motion on the page */
+function RadarConsole() {
+  return (
+    <div className="relative w-full max-w-[340px] aspect-square mx-auto">
+      <svg viewBox="0 0 200 200" className="w-full h-full">
+        <defs>
+          <radialGradient id="rd-core" cx="50%" cy="50%" r="50%">
+            <stop offset="0%" stopColor="#c9a84c" stopOpacity="0.16" />
+            <stop offset="70%" stopColor="#c9a84c" stopOpacity="0" />
+          </radialGradient>
+          <linearGradient id="rd-sweep" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0%" stopColor="#f2d67e" stopOpacity="0.55" />
+            <stop offset="100%" stopColor="#f2d67e" stopOpacity="0" />
+          </linearGradient>
+        </defs>
+        <circle cx="100" cy="100" r="92" fill="url(#rd-core)" />
+        {[34, 60, 86].map((r) => (
+          <circle key={r} cx="100" cy="100" r={r} fill="none" stroke="#c9a84c" strokeOpacity="0.22" strokeWidth="1" />
+        ))}
+        <line x1="100" y1="8" x2="100" y2="192" stroke="#c9a84c" strokeOpacity="0.14" strokeWidth="1" />
+        <line x1="8" y1="100" x2="192" y2="100" stroke="#c9a84c" strokeOpacity="0.14" strokeWidth="1" />
+        <g
+          className="radar-sweep"
+          style={{ transformOrigin: "100px 100px", transformBox: "view-box" }}
+        >
+          <path d="M100 100 L100 12 A88 88 0 0 1 176 58 Z" fill="url(#rd-sweep)" />
+          <line x1="100" y1="100" x2="100" y2="12" stroke="#f2d67e" strokeOpacity="0.7" strokeWidth="1.4" />
+        </g>
+        {[
+          { cx: 132, cy: 74, d: 0 },
+          { cx: 74, cy: 128, d: 1.3 },
+          { cx: 138, cy: 132, d: 2.1 },
+        ].map((b, i) => (
+          <motion.circle
+            key={i}
+            cx={b.cx}
+            cy={b.cy}
+            r="3"
+            fill="#f2d67e"
+            animate={{ opacity: [0.2, 1, 0.2], scale: [0.8, 1.3, 0.8] }}
+            transition={{ duration: 2.4, repeat: Infinity, delay: b.d, ease: "easeInOut" }}
+          />
+        ))}
+        <circle cx="100" cy="100" r="3.5" fill="#f2d67e" />
+      </svg>
+    </div>
+  );
+}
 
 export default function Home() {
   return (
     <div className="min-h-screen">
-      {/* ── Hero ── */}
-      <section className="relative overflow-hidden pt-20 pb-16 px-6">
-        <div className="max-w-[1600px] w-full mx-auto text-center relative z-10">
-          {/* Badge */}
-          <motion.div
-            initial={{ opacity: 0, y: -20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5 }}
-            className="inline-flex items-center gap-2 px-4 py-2 rounded-full mb-8 text-sm font-semibold badge"
-          >
-            <span className="w-2 h-2 rounded-full bg-theme-gold animate-pulse" />
-            Futuristic Tool Suite · v2.0
-          </motion.div>
-
-          {/* Headline */}
-          <motion.h1
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.1 }}
-            className="text-5xl md:text-7xl font-bold mb-6 leading-tight font-grotesk text-theme-text"
-          >
-            Your Ultimate
-            <br />
-            <span className="bg-gradient-gold bg-clip-text text-transparent">
-              Digital Toolbox
-            </span>
-          </motion.h1>
-
-          <motion.p
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.2 }}
-            className="text-lg md:text-xl mb-12 max-w-2xl mx-auto leading-relaxed text-theme-muted"
-          >
-            Professional-grade utilities built for speed and precision.
-            100% client-side - your data never leaves your browser.
-          </motion.p>
-
-          {/* CTA buttons */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.3 }}
-            className="flex flex-col sm:flex-row items-center justify-center gap-4"
-          >
-            <Link href="/tools/email-checker">
-              <motion.button className="btn-primary px-8 py-4 text-base flex items-center gap-2">
-                <Zap size={18} />
-                Launch Tools
-                <ArrowRight size={16} />
-              </motion.button>
-            </Link>
-            <motion.a
-              href="#tools"
-              className="btn-secondary px-8 py-4 text-base flex items-center gap-2"
-            >
-              <Star size={16} />
-              Explore Tools
-            </motion.a>
-          </motion.div>
-        </div>
-
-        {/* Floating icons row */}
+      {/* ── Hero: radar console ── */}
+      <section className="px-4 sm:px-6 pt-10 pb-14">
         <motion.div
-          initial={{ opacity: 0, y: 40 }}
+          initial={{ opacity: 0, y: 22 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.7, delay: 0.5 }}
-          className="flex items-center justify-center gap-6 mt-16 flex-wrap"
+          transition={{ duration: 0.7, ease: [0.2, 0.7, 0.2, 1] }}
+          className="max-w-[1200px] mx-auto relative overflow-hidden rounded-[28px] border border-white/10"
+          style={{ background: "linear-gradient(160deg, #0c0f16, #141a26)" }}
         >
-          {[
-            { icon: <Mail size={22} />, delay: 0 },
-            { icon: <Globe size={22} />, delay: 0.4 },
-            { icon: <Filter size={22} />, delay: 0.8 },
-            { icon: <LinkIcon size={22} />, delay: 1.2 },
-            { icon: <Monitor size={22} />, delay: 1.6 },
-            { icon: <Cpu size={22} />, delay: 2 },
-          ].map((item, i) => (
-            <motion.div
-              key={i}
-              animate={{ y: [0, -10, 0] }}
-              transition={{ duration: 4, repeat: Infinity, delay: item.delay, ease: "easeInOut" }}
-              className="w-14 h-14 rounded-2xl flex items-center justify-center bg-white border border-slate-100 shadow-sm text-theme-gold"
-            >
-              {item.icon}
-            </motion.div>
-          ))}
+          {/* engineered texture */}
+          <div
+            className="absolute inset-0 opacity-[0.5] pointer-events-none"
+            style={{
+              backgroundImage:
+                "radial-gradient(rgba(201,168,76,0.10) 1px, transparent 1px)",
+              backgroundSize: "26px 26px",
+              maskImage: "radial-gradient(120% 100% at 100% 0%, #000 20%, transparent 75%)",
+              WebkitMaskImage: "radial-gradient(120% 100% at 100% 0%, #000 20%, transparent 75%)",
+            }}
+          />
+
+          <div className="relative grid lg:grid-cols-[1.15fr_0.85fr] gap-8 p-8 sm:p-12 lg:p-14 items-center">
+            {/* copy */}
+            <div>
+              <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full border border-white/10 bg-white/[0.04] mb-7">
+                <span className="relative flex h-2 w-2">
+                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-60" />
+                  <span className="relative inline-flex rounded-full h-2 w-2 bg-green-400" />
+                </span>
+                <span className="text-xs font-medium text-slate-300 font-grotesk">All systems live</span>
+              </div>
+
+              <h1 className="font-grotesk font-extrabold tracking-tight text-white text-4xl sm:text-5xl lg:text-[3.4rem] leading-[1.04] mb-5">
+                Your search operations,
+                <br className="hidden sm:block" /> in one console.
+              </h1>
+
+              <p className="text-slate-300/90 text-base sm:text-lg leading-relaxed max-w-xl mb-9">
+                Domain intelligence, crawl tracking, rank checks, and report cleanup — the tools SEO
+                teams reach for, tuned for speed and free to run.
+              </p>
+
+              <div className="flex flex-col sm:flex-row gap-3 mb-11">
+                <a href="#tools">
+                  <motion.button whileHover={{ y: -2 }} whileTap={{ scale: 0.98 }} className="btn-primary px-7 py-3.5 text-sm w-full sm:w-auto flex items-center justify-center gap-2">
+                    Browse the toolkit
+                    <ArrowRight size={16} />
+                  </motion.button>
+                </a>
+                <Link href="/tools/domain-insights">
+                  <motion.button
+                    whileHover={{ y: -2 }} whileTap={{ scale: 0.98 }}
+                    className="px-7 py-3.5 text-sm w-full sm:w-auto flex items-center justify-center gap-2 rounded-xl font-grotesk font-medium text-white border border-white/15 bg-white/[0.03] hover:bg-white/[0.07] hover:border-white/25 transition-colors"
+                  >
+                    <Search size={15} /> Try Domain Insights
+                  </motion.button>
+                </Link>
+              </div>
+
+              {/* instrument readouts */}
+              <div className="grid grid-cols-3 max-w-md border-t border-white/10 pt-6">
+                {readouts.map((r, i) => (
+                  <div key={r.l} className={i > 0 ? "pl-5 border-l border-white/10" : ""}>
+                    <div className="font-mono text-2xl sm:text-3xl font-semibold text-white leading-none">{r.n}</div>
+                    <div className="text-[11px] text-slate-400 mt-1.5 leading-tight">{r.l}</div>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {/* radar */}
+            <div className="hidden lg:block">
+              <RadarConsole />
+            </div>
+          </div>
         </motion.div>
       </section>
 
-      {/* ── Stats ── */}
-      <section className="py-16 px-6">
-        <div className="max-w-[1600px] w-full mx-auto grid grid-cols-2 md:grid-cols-4 gap-6">
-          {stats.map((s, i) => (
-            <motion.div
-              key={i}
-              initial={{ opacity: 0, y: 30 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.5, delay: i * 0.1 }}
-              className="text-center p-6 card-base card-hover"
-            >
-              <div className="w-12 h-12 rounded-xl flex items-center justify-center mx-auto mb-4 bg-slate-50 text-theme-gold border border-slate-100 group-hover:scale-110 transition-transform">
-                {s.icon}
-              </div>
-              <div className="text-3xl font-bold mb-1 font-grotesk text-theme-text">
-                {s.value}
-              </div>
-              <div className="text-sm text-theme-muted">
-                {s.label}
-              </div>
-            </motion.div>
-          ))}
-        </div>
-      </section>
+      {/* ── Tools ── */}
+      <section id="tools" className="px-4 sm:px-6 pb-24 scroll-mt-20">
+        <div className="max-w-[1200px] mx-auto">
+          <div className="flex items-end justify-between flex-wrap gap-3 mb-8">
+            <h2 className="text-2xl sm:text-3xl font-grotesk font-bold text-theme-text">The toolkit</h2>
+            <p className="text-sm text-theme-muted">Open one and start working — no sign-up, no tracking.</p>
+          </div>
 
-      {/* ── Tools Grid ── */}
-      <section id="tools" className="py-16 px-6">
-        <div className="max-w-[1600px] w-full mx-auto">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            className="text-center mb-14"
-          >
-            <h2 className="text-4xl md:text-5xl font-bold mb-4 font-grotesk text-theme-text">
-              All Tools
-            </h2>
-            <p className="text-lg text-theme-muted">
-              Pick a tool and start working - no sign-up, no tracking
-            </p>
-          </motion.div>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-            {tools.map((tool, i) => (
-              <motion.div
-                key={i}
-                initial={{ opacity: 0, y: 40 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.5, delay: i * 0.1 }}
-                className="relative p-8 rounded-3xl cursor-auto group card-base card-hover"
-              >
-                {/* Coming Soon Ribbon */}
-                {tool.comingSoon && (
-                  <div className="absolute top-6 right-6 px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider bg-slate-100 text-slate-500 border border-slate-200">
-                    COMING SOON
-                  </div>
-                )}
-
-                {/* Label */}
-                {tool.label && (
-                  <span className="absolute top-4 right-4 px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider bg-theme-gold text-white">
-                    {tool.label}
-                  </span>
-                )}
-
-                {/* Icon */}
-                <div className="w-12 h-12 rounded-xl flex items-center justify-center mb-5 bg-gradient-gold text-white shadow-md shadow-theme-gold/20">
-                  {tool.icon}
-                </div>
-
-                {/* Text */}
-                <h3 className="text-xl font-bold mb-1 font-grotesk text-theme-text group-hover:text-theme-gold transition-colors">
-                  {tool.name}
-                </h3>
-                <p className="text-sm font-semibold mb-3 text-theme-gold">
-                  {tool.tagline}
-                </p>
-                <p className="text-sm mb-6 leading-relaxed text-theme-muted">
-                  {tool.description}
-                </p>
-
-                {/* Features */}
-                <div className="flex flex-wrap gap-2 mb-8">
-                  {tool.features.map((f, j) => (
-                    <span key={j} className="badge">
-                      <CheckCircle size={11} className="text-theme-gold" />
-                      {f}
+          <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-5">
+            {tools.map((tool, i) => {
+              const kind = toolKind(tool);
+              return (
+                <div key={i} className="relative p-6 group card-base card-hover flex flex-col">
+                  {/* status channel */}
+                  <div className="flex items-center justify-between mb-5">
+                    <span className="inline-flex items-center gap-2 text-[11px] font-medium text-theme-muted font-grotesk">
+                      <span className="w-1.5 h-1.5 rounded-full" style={{ background: kind.dot }} />
+                      {kind.label}
                     </span>
-                  ))}
-                </div>
+                    {tool.label && (
+                      <span className="text-[10px] font-bold text-theme-gold-deep bg-theme-gold/10 border border-theme-gold/25 rounded-full px-2 py-0.5 font-grotesk">
+                        {tool.label}
+                      </span>
+                    )}
+                  </div>
 
-                {/* CTA */}
-                {tool.download ? (
-                  <a href={tool.href} download>
-                    <button className="flex items-center gap-2 px-5 py-2.5 rounded-xl text-sm font-bold w-full sm:w-auto justify-center transition-all bg-theme-gold text-white hover:bg-[#a5883a] shadow-md hover:shadow-lg hover:-translate-y-0.5">
-                      {tool.cta ?? "Download"}
-                      <Download size={15} />
-                    </button>
-                  </a>
-                ) : (
-                  <Link href={tool.href}>
-                    <button
-                      className={`flex items-center gap-2 px-5 py-2.5 rounded-xl text-sm font-bold w-full sm:w-auto justify-center transition-all ${
-                        tool.comingSoon
-                          ? "bg-slate-50 text-slate-400 border border-slate-200 cursor-not-allowed"
-                          : "bg-theme-gold text-white hover:bg-[#a5883a] shadow-md hover:shadow-lg hover:-translate-y-0.5"
-                      }`}
-                      disabled={tool.comingSoon}
-                    >
-                      {tool.comingSoon ? "Preview Coming Soon" : "Launch Tool"}
-                      <ArrowRight size={15} />
-                    </button>
-                  </Link>
-                )}
-              </motion.div>
-            ))}
+                  {/* icon tile */}
+                  <div
+                    className={`w-12 h-12 rounded-xl flex items-center justify-center mb-4 ${
+                      tool.download
+                        ? "bg-gradient-gold text-[#1b1403] shadow-gold"
+                        : "bg-theme-surface-2 text-theme-gold border border-theme-line"
+                    }`}
+                  >
+                    {tool.icon}
+                  </div>
+
+                  <h3 className="text-lg font-grotesk font-bold text-theme-text mb-1 group-hover:text-theme-gold-deep transition-colors">
+                    {tool.name}
+                  </h3>
+                  <p className="text-[13px] font-medium text-theme-gold-deep mb-2.5">{tool.tagline}</p>
+                  <p className="text-sm text-theme-muted leading-relaxed mb-5">{tool.description}</p>
+
+                  <ul className="space-y-1.5 mb-6">
+                    {tool.features.map((f, j) => (
+                      <li key={j} className="flex items-center gap-2 text-[13px] text-theme-text/90">
+                        <CheckCircle size={13} className="text-theme-gold flex-shrink-0" />
+                        {f}
+                      </li>
+                    ))}
+                  </ul>
+
+                  {/* CTA pinned to bottom */}
+                  <div className="mt-auto">
+                    {tool.download ? (
+                      <a href={tool.href} download className="block">
+                        <button className="btn-primary w-full px-4 py-2.5 text-sm flex items-center justify-center gap-2">
+                          {tool.cta ?? "Download"} <Download size={15} />
+                        </button>
+                      </a>
+                    ) : (
+                      <Link href={tool.href} className="block">
+                        <button className="btn-secondary w-full px-4 py-2.5 text-sm flex items-center justify-center gap-2 group/btn">
+                          {/^https?:\/\//.test(tool.href) ? "Open" : "Open tool"}
+                          {/^https?:\/\//.test(tool.href) ? (
+                            <ArrowUpRight size={15} className="transition-transform group-hover/btn:translate-x-0.5 group-hover/btn:-translate-y-0.5" />
+                          ) : (
+                            <ArrowRight size={15} className="transition-transform group-hover/btn:translate-x-0.5" />
+                          )}
+                        </button>
+                      </Link>
+                    )}
+                  </div>
+                </div>
+              );
+            })}
           </div>
         </div>
       </section>

@@ -10,29 +10,37 @@ const config: Config = {
     extend: {
       colors: {
         theme: {
-          bg: "#f8fafc",        // slate-50
+          bg: "#e9ecf2",        // cool titanium porcelain
           surface: "#ffffff",
-          border: "#e2e8f0",    // slate-200
-          text: "#0f172a",      // slate-900
-          muted: "#64748b",     // slate-500
-          gold: "#c9a84c",      // from user's code
+          "surface-2": "#f3f6fb",
+          border: "#dce2ec",    // cool hairline
+          line: "#dce2ec",
+          text: "#10141c",      // cool graphite ink
+          muted: "#626c7e",     // cool slate
+          gold: "#c9a84c",
+          "gold-lite": "#f2d67e",
+          "gold-deep": "#9a7b2c",
           "gold-dim": "#41300c",
-          accent: "#4f46e5",    // indigo-600
+          ink: "#0c0f16",       // dark console
+          "ink-2": "#141a26",
+          accent: "#37506c",    // structural steel (secondary, not a competing accent)
         },
       },
       fontFamily: {
-        grotesk: ["Space Grotesk", "sans-serif"],
+        grotesk: ["Sora", "Space Grotesk", "sans-serif"],
+        sora:    ["Sora", "sans-serif"],
         inter:   ["Inter", "sans-serif"],
         mono:    ["JetBrains Mono", "monospace"],
       },
       boxShadow: {
-        "card": "0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03)",
-        "card-hover": "0 20px 25px -5px rgba(0, 0, 0, 0.05), 0 10px 10px -5px rgba(0, 0, 0, 0.02)",
-        "glow": "0 0 20px rgba(201, 168, 76, 0.15)",
+        "card": "inset 0 1px 0 rgba(255,255,255,0.85), 0 1px 2px rgba(16,20,28,0.04), 0 12px 28px -14px rgba(16,20,28,0.16)",
+        "card-hover": "inset 0 1px 0 rgba(255,255,255,0.9), 0 18px 42px -18px rgba(16,20,28,0.26), 0 0 0 1px rgba(201,168,76,0.35)",
+        "glow": "0 0 24px rgba(201, 168, 76, 0.18)",
+        "gold": "0 8px 20px -8px rgba(201,168,76,0.55)",
       },
       backgroundImage: {
-        "gradient-gold": "linear-gradient(135deg, #c9a84c, #8a7333)",
-        "gradient-accent": "linear-gradient(135deg, #4f46e5, #3b82f6)",
+        "gradient-gold": "linear-gradient(180deg, #f2d67e, #c9a84c 45%, #9a7b2c)",
+        "gradient-accent": "linear-gradient(135deg, #37506c, #22304a)",
       },
       animation: {
         "float": "float 6s ease-in-out infinite",
