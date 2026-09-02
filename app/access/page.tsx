@@ -22,14 +22,21 @@ export default function AccessPage() {
   // resolve this machine by fingerprint; optionally attach an email to enrol
   const resolve = useCallback(async (withEmail?: string) => {
     if (!fpRef.current) fpRef.current = await getFingerprint();
-    const res = await fetch("/api/device/resolve", {
-      method: "POST",
-      headers: { "content-type": "application/json" },
-      body: JSON.stringify({ fp: fpRef.current, email: withEmail || undefined }),
-    });
-    const j = await res.json().catch(() => ({}));
-    if (!res.ok) throw new Error(j?.error || "Request failed");
-    return j as { status: Status; name?: string; email?: string };
+    const ctrl = new AbortController();
+    const t = setTimeout(() => ctrl.abort(), 12000);
+    try {
+      const res = await fetch("/api/device/resolve", {
+        method: "POST",
+        headers: { "content-type": "application/json" },
+        body: JSON.stringify({ fp: fpRef.current, email: withEmail || undefined }),
+        signal: ctrl.signal,
+      });
+      const j = await res.json().catch(() => ({}));
+      if (!res.ok) throw new Error(j?.error || "Request failed");
+      return j as { status: Status; name?: string; email?: string };
+    } finally {
+      clearTimeout(t);
+    }
   }, []);
 
   const check = useCallback(async () => {
