@@ -29,7 +29,6 @@ const STATUS_STYLE: Record<Device["status"], string> = {
 export default function AdminPage() {
   const [authed, setAuthed] = useState<boolean | null>(null);
   const [devices, setDevices] = useState<Device[]>([]);
-  const [persistent, setPersistent] = useState(true);
   const [key, setKey] = useState("");
   const [error, setError] = useState("");
   const [busy, setBusy] = useState(false);
@@ -40,7 +39,6 @@ export default function AdminPage() {
     if (res.status === 401) { setAuthed(false); return; }
     const j = await res.json();
     setDevices(j.devices || []);
-    setPersistent(j.persistent !== false);
     setAuthed(true);
   }, []);
 
@@ -130,13 +128,6 @@ export default function AdminPage() {
             <button onClick={logout} className="inline-flex items-center gap-2 rounded-lg border border-white/10 bg-white/5 px-3 py-2 text-sm text-slate-300 hover:text-red-300 hover:border-red-400/30 transition-colors"><LogOut size={14} /> Sign out</button>
           </div>
         </div>
-
-        {!persistent && (
-          <div className="mb-6 flex items-start gap-2 rounded-xl border border-amber-400/30 bg-amber-500/10 px-4 py-3 text-sm text-amber-200">
-            <AlertCircle size={16} className="mt-0.5 shrink-0" />
-            <span>Using temporary in-memory storage — approvals reset on redeploy. Set <code className="font-mono">UPSTASH_REDIS_REST_URL</code> &amp; <code className="font-mono">UPSTASH_REDIS_REST_TOKEN</code> in Vercel for persistent, production-grade storage.</span>
-          </div>
-        )}
 
         {/* pending */}
         <div className="flex items-center justify-between gap-2 mb-3">
