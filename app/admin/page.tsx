@@ -4,13 +4,14 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   ShieldCheck, KeyRound, Loader2, Lock, Check, Ban, Trash2, Pencil,
-  MonitorSmartphone, RefreshCw, LogOut, AlertCircle, Clock,
+  MonitorSmartphone, RefreshCw, LogOut, AlertCircle, Clock, MessageSquare,
 } from "lucide-react";
 
 type Device = {
   id: string; name: string; email: string; status: "pending" | "approved" | "revoked";
   ua: string; ip: string; createdAt: number; updatedAt: number; lastSeen: number;
 };
+type Feedback = { id: string; type: string; email: string; message: string; ip: string; createdAt: number };
 
 function ago(ts: number) {
   const s = Math.round((Date.now() - ts) / 1000);
@@ -29,6 +30,7 @@ const STATUS_STYLE: Record<Device["status"], string> = {
 export default function AdminPage() {
   const [authed, setAuthed] = useState<boolean | null>(null);
   const [devices, setDevices] = useState<Device[]>([]);
+  const [feedback, setFeedback] = useState<Feedback[]>([]);
   const [key, setKey] = useState("");
   const [error, setError] = useState("");
   const [busy, setBusy] = useState(false);
@@ -40,7 +42,16 @@ export default function AdminPage() {
     const j = await res.json();
     setDevices(j.devices || []);
     setAuthed(true);
+    try {
+      const fr = await fetch("/api/admin/feedback", { cache: "no-store" });
+      if (fr.ok) setFeedback((await fr.json()).feedback || []);
+    } catch { /* ignore */ }
   }, []);
+
+  async function deleteFeedback(id: string) {
+    await fetch("/api/admin/feedback", { method: "DELETE", headers: { "content-type": "application/json" }, body: JSON.stringify({ id }) });
+    load();
+  }
 
   useEffect(() => {
     load();
@@ -158,6 +169,28 @@ export default function AdminPage() {
         ) : (
           <div className="space-y-2">
             <AnimatePresence>{others.map((d) => <Row key={d.id} d={d} act={act} />)}</AnimatePresence>
+          </div>
+        )}
+
+        {/* feedback */}
+        <h2 className="flex items-center gap-2 text-xs font-bold uppercase tracking-widest font-grotesk text-slate-400 mt-10 mb-3">
+          <MessageSquare size={13} className="text-theme-gold" /> Feedback <span className="text-slate-500">({feedback.length})</span>
+        </h2>
+        {feedback.length === 0 ? (
+          <p className="text-sm text-slate-500">No feedback yet.</p>
+        ) : (
+          <div className="space-y-2">
+            {feedback.map((f) => (
+              <div key={f.id} className="rounded-xl border border-white/10 bg-white/[0.03] px-4 py-3">
+                <div className="flex items-center gap-2 flex-wrap mb-1.5">
+                  <span className="rounded-full border border-theme-gold/25 bg-theme-gold/10 text-theme-gold px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider">{f.type}</span>
+                  {f.email && <a href={`mailto:${f.email}`} className="text-xs text-slate-300 hover:text-theme-gold">{f.email}</a>}
+                  <span className="text-[11px] text-slate-500 font-mono">{ago(f.createdAt)}</span>
+                  <button onClick={() => { if (confirm("Delete this feedback?")) deleteFeedback(f.id); }} title="Delete" className="ml-auto rounded-lg border border-white/10 text-slate-400 p-1.5 hover:text-red-300 hover:border-red-400/30 transition-colors"><Trash2 size={13} /></button>
+                </div>
+                <p className="text-sm text-slate-200 whitespace-pre-wrap leading-relaxed">{f.message}</p>
+              </div>
+            ))}
           </div>
         )}
       </div>

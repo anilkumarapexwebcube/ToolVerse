@@ -169,10 +169,23 @@ export default function Footer() {
           </motion.div>
         </motion.div>
 
+        {/* secondary links */}
+        <div className="mt-12 flex flex-wrap items-center gap-x-6 gap-y-2">
+          {[
+            { href: "/about", label: "About & Contact" },
+            { href: "/feed", label: "What's new" },
+            { href: "/feedback", label: "Share feedback" },
+          ].map((l) => (
+            <Link key={l.href} href={l.href} className="text-sm text-slate-400 hover:text-theme-gold transition-colors">
+              {l.label}
+            </Link>
+          ))}
+        </div>
+
         {/* Bottom bar */}
-        <div className="mt-14 pt-6 border-t border-white/10 flex flex-col sm:flex-row items-center justify-between gap-4">
+        <div className="mt-6 pt-6 border-t border-white/10 flex flex-col sm:flex-row items-center justify-between gap-4">
           <p className="text-xs text-slate-500 font-grotesk text-center sm:text-left">
-            © 2026 ToolVerse Pro · All tools are 100% free &amp; secure
+            © 2026 ToolVerse Pro · <Link href="/about" className="hover:text-theme-gold transition-colors">Apex Web Cube</Link>, Jaipur
           </p>
           <div className="flex items-center gap-1.5 text-xs font-grotesk text-slate-500">
             <span>Made with</span>
