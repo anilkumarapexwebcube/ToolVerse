@@ -32,8 +32,8 @@ const groups: FGroup[] = [
     accent: "#c9a84c",
     links: [
       { href: "/tools/gsc-crawl-check", label: "GSC Last Crawl Checker", icon: <CalendarClock size={15} />, badge: "NEW" },
-      { href: SEARCHOPS_EXE_URL, label: "SearchOps Studio", icon: <Monitor size={15} />, download: true },
-      { href: RANK_RADAR_EXE_URL, label: "Rank Radar", icon: <Radar size={15} />, download: true },
+      { href: "/tools/searchops-studio", label: "SearchOps Studio", icon: <Monitor size={15} /> },
+      { href: "/tools/rank-radar", label: "Rank Radar", icon: <Radar size={15} /> },
       { href: "/tools/ranking-report-filter", label: "Ranking Report Filter", icon: <FileSpreadsheet size={15} /> },
     ],
   },

@@ -5,14 +5,23 @@ import {
   Mail, Globe, Filter, ArrowRight, ArrowUpRight, CheckCircle,
   Monitor, Search, Bot, Download, CalendarClock, Radar, FileSpreadsheet
 } from "lucide-react";
+import type { ReactNode } from "react";
 
-// SearchOps Studio desktop installer (Dropbox direct download — dl=1 avoids the Dropbox page)
-const SEO_TOOLKIT_EXE_URL =
-  "https://www.dropbox.com/scl/fi/rketviou0i4pbt6ho7rr8/SearchOps-Studio-Setup-1.6.0.exe?rlkey=igid6mwyvq0cn5m705cg5nuv6&st=ycak0hi6&dl=1";
-const RANK_RADAR_EXE_URL =
-  "https://www.dropbox.com/scl/fi/5sxksq5swpvhm7a14kjr3/RankRadar.exe?rlkey=zjalmw3ljlmxzzvvzehn5mk84&st=tlyzqddk&dl=1";
+type Tool = {
+  href: string;
+  icon: ReactNode;
+  name: string;
+  tagline: string;
+  description: string;
+  badge: string;
+  features: string[];
+  comingSoon: boolean;
+  label?: string;
+  download?: boolean;
+  cta?: string;
+};
 
-const tools = [
+const tools: Tool[] = [
    {
     href:        "https://mailreplyai.vercel.app",
     label:       "New",
@@ -36,20 +45,18 @@ const tools = [
     comingSoon:  false,
   },
   {
-    href:        SEO_TOOLKIT_EXE_URL,
+    href:        "/tools/searchops-studio",
     label:       "New",
     icon:        <Monitor size={24} />,
     name:        "SearchOps Studio",
     tagline:     "All-in-one SEO desktop app for Windows",
-    description: "A powerful desktop toolkit for SEO pros — bulk domain metrics, on-page audits, keyword & rank utilities, and reports, all running natively on your PC. Download the installer and run it locally.",
+    description: "A powerful desktop toolkit for SEO pros — crawl & index audits, rank tracking, broken-link scans, AI-visibility, content tools, and bulk reports, all running natively on your PC.",
     badge:       "NEW",
     features:    ["Windows .exe installer", "Runs 100% on your PC", "Bulk & batch processing"],
     comingSoon:  false,
-    download:    true,
-    cta:         "Download for Windows",
   },
   {
-    href:        RANK_RADAR_EXE_URL,
+    href:        "/tools/rank-radar",
     label:       "New",
     icon:        <Radar size={24} />,
     name:        "Rank Radar",
@@ -58,8 +65,6 @@ const tools = [
     badge:       "NEW",
     features:    ["City-level rankings", "Personalization off", "Windows .exe installer"],
     comingSoon:  false,
-    download:    true,
-    cta:         "Download for Windows",
   },
   {
     href:        "/tools/domain-insights",

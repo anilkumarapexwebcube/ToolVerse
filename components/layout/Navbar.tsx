@@ -8,11 +8,6 @@ import {
 } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 
-const SEARCHOPS_EXE_URL =
-  "https://www.dropbox.com/scl/fi/rketviou0i4pbt6ho7rr8/SearchOps-Studio-Setup-1.6.0.exe?rlkey=igid6mwyvq0cn5m705cg5nuv6&st=ycak0hi6&dl=1";
-const RANK_RADAR_EXE_URL =
-  "https://www.dropbox.com/scl/fi/5sxksq5swpvhm7a14kjr3/RankRadar.exe?rlkey=zjalmw3ljlmxzzvvzehn5mk84&st=ffek5bay&dl=1";
-
 type Item = {
   href: string;
   label: string;
@@ -44,8 +39,8 @@ const CATEGORIES: Category[] = [
     accent: "#c9a84c", // gold
     items: [
       { href: "/tools/gsc-crawl-check", label: "GSC Last Crawl Checker", desc: "Bulk last Google crawl dates", icon: <CalendarClock size={18} />, badge: "New" },
-      { href: SEARCHOPS_EXE_URL, label: "SearchOps Studio", desc: "All-in-one SEO desktop app", icon: <Monitor size={18} />, download: true },
-      { href: RANK_RADAR_EXE_URL, label: "Rank Radar", desc: "True city-level rank tracker", icon: <Radar size={18} />, download: true },
+      { href: "/tools/searchops-studio", label: "SearchOps Studio", desc: "All-in-one SEO desktop app", icon: <Monitor size={18} /> },
+      { href: "/tools/rank-radar", label: "Rank Radar", desc: "True city-level rank tracker", icon: <Radar size={18} /> },
       { href: "/tools/ranking-report-filter", label: "Ranking Report Filter", desc: "Excel macro to clean rank exports", icon: <FileSpreadsheet size={18} /> },
     ],
   },
