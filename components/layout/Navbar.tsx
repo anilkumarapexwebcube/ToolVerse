@@ -112,8 +112,8 @@ export default function Navbar() {
         <div className="flex items-center gap-2">
           {/* Desktop category triggers */}
           <div className="hidden lg:flex items-center gap-1">
-            <Link href="/feedback">
-              <MessageSquareCode size={15} />
+            <Link href="/feedback" className='mr-2'>
+              <MessageSquareCode size={18} />
             </Link>
             {CATEGORIES.map((cat) => {
               const isOpen = openCat === cat.name;
