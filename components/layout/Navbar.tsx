@@ -4,7 +4,7 @@ import { usePathname } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   Menu, X, ChevronDown, ArrowUpRight, Download,
-  Bot, Search, Mail, Globe, Filter, CalendarClock, Monitor, Radar, FileSpreadsheet,
+  Bot, Search, Mail, Globe, Filter, CalendarClock, Monitor, Radar, FileSpreadsheet, MessageSquareCode
 } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 
@@ -112,85 +112,88 @@ export default function Navbar() {
         <div className="flex items-center gap-2">
           {/* Desktop category triggers */}
           <div className="hidden lg:flex items-center gap-1">
-          {CATEGORIES.map((cat) => {
-            const isOpen = openCat === cat.name;
-            const hasActive = cat.items.some((it) => it.href === pathname);
-            return (
-              <div
-                key={cat.name}
-                className="relative"
-                onMouseEnter={() => openMenu(cat.name)}
-                onMouseLeave={scheduleClose}
-              >
-                <button
-                  onClick={() => (isOpen ? setOpenCat(null) : openMenu(cat.name))}
-                  aria-expanded={isOpen}
-                  aria-haspopup="true"
-                  className={`flex items-center gap-1.5 rounded-lg px-3.5 py-2 text-sm font-semibold font-grotesk transition-colors outline-none focus-visible:ring-2 focus-visible:ring-theme-gold/40 ${isOpen ? "bg-slate-100 text-theme-text" : hasActive ? "text-theme-gold" : "text-theme-text hover:bg-slate-50"}`}
+            <Link href="/feedback">
+              <MessageSquareCode size={15} />
+            </Link>
+            {CATEGORIES.map((cat) => {
+              const isOpen = openCat === cat.name;
+              const hasActive = cat.items.some((it) => it.href === pathname);
+              return (
+                <div
+                  key={cat.name}
+                  className="relative"
+                  onMouseEnter={() => openMenu(cat.name)}
+                  onMouseLeave={scheduleClose}
                 >
-                  <span className="h-1.5 w-1.5 rounded-full" style={{ background: cat.accent, opacity: isOpen || hasActive ? 1 : 0.5 }} />
-                  {cat.name}
-                  <ChevronDown size={15} className={`transition-transform duration-200 ${isOpen ? "rotate-180" : ""} ${isOpen || hasActive ? "text-theme-gold" : "text-theme-muted"}`} />
-                </button>
+                  <button
+                    onClick={() => (isOpen ? setOpenCat(null) : openMenu(cat.name))}
+                    aria-expanded={isOpen}
+                    aria-haspopup="true"
+                    className={`flex items-center gap-1.5 rounded-lg px-3.5 py-2 text-sm font-semibold font-grotesk transition-colors outline-none focus-visible:ring-2 focus-visible:ring-theme-gold/40 ${isOpen ? "bg-slate-100 text-theme-text" : hasActive ? "text-theme-gold" : "text-theme-text hover:bg-slate-50"}`}
+                  >
+                    <span className="h-1.5 w-1.5 rounded-full" style={{ background: cat.accent, opacity: isOpen || hasActive ? 1 : 0.5 }} />
+                    {cat.name}
+                    <ChevronDown size={15} className={`transition-transform duration-200 ${isOpen ? "rotate-180" : ""} ${isOpen || hasActive ? "text-theme-gold" : "text-theme-muted"}`} />
+                  </button>
 
-                <AnimatePresence>
-                  {isOpen && (
-                    <motion.div
-                      initial={{ opacity: 0, y: 6 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      exit={{ opacity: 0, y: 6 }}
-                      transition={{ duration: 0.16, ease: "easeOut" }}
-                      className="absolute right-0 top-full pt-2 w-[360px]"
-                    >
-                    <div className="rounded-2xl bg-white border border-theme-border shadow-xl shadow-slate-900/10 overflow-hidden">
-                      {/* category-colored accent + header */}
-                      <div className="h-1 w-full" style={{ background: cat.accent }} />
-                      <div className="px-4 pt-3 pb-2">
-                        <div className="text-sm font-bold font-grotesk text-theme-text">{cat.name}</div>
-                        <p className="text-xs text-theme-muted">{cat.blurb}</p>
-                      </div>
-                      <div className="p-2">
-                        {cat.items.map((it) => {
-                          const active = it.href === pathname;
-                          return (
-                            <Link
-                              key={it.href}
-                              href={it.href}
-                              {...itemProps(it)}
-                              onClick={() => setOpenCat(null)}
-                              aria-current={active ? "page" : undefined}
-                              className={`group flex items-start gap-3 rounded-xl p-2.5 transition-all duration-200 hover:translate-x-1 ${active ? "bg-slate-50" : "hover:bg-slate-50"}`}
-                            >
-                              <span
-                                className="mt-0.5 flex h-9 w-9 shrink-0 items-center justify-center rounded-lg text-white transition-transform duration-200 group-hover:scale-110 group-hover:-rotate-6"
-                                style={{ background: cat.accent }}
+                  <AnimatePresence>
+                    {isOpen && (
+                      <motion.div
+                        initial={{ opacity: 0, y: 6 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        exit={{ opacity: 0, y: 6 }}
+                        transition={{ duration: 0.16, ease: "easeOut" }}
+                        className="absolute right-0 top-full pt-2 w-[360px]"
+                      >
+                      <div className="rounded-2xl bg-white border border-theme-border shadow-xl shadow-slate-900/10 overflow-hidden">
+                        {/* category-colored accent + header */}
+                        <div className="h-1 w-full" style={{ background: cat.accent }} />
+                        <div className="px-4 pt-3 pb-2">
+                          <div className="text-sm font-bold font-grotesk text-theme-text">{cat.name}</div>
+                          <p className="text-xs text-theme-muted">{cat.blurb}</p>
+                        </div>
+                        <div className="p-2">
+                          {cat.items.map((it) => {
+                            const active = it.href === pathname;
+                            return (
+                              <Link
+                                key={it.href}
+                                href={it.href}
+                                {...itemProps(it)}
+                                onClick={() => setOpenCat(null)}
+                                aria-current={active ? "page" : undefined}
+                                className={`group flex items-start gap-3 rounded-xl p-2.5 transition-all duration-200 hover:translate-x-1 ${active ? "bg-slate-50" : "hover:bg-slate-50"}`}
                               >
-                                {it.icon}
-                              </span>
-                              <span className="min-w-0 flex-1">
-                                <span className="flex items-center gap-1.5">
-                                  <span className="text-sm font-semibold font-grotesk text-theme-text truncate">{it.label}</span>
-                                  {it.badge && (
-                                    <span className="rounded bg-red-500 px-1.5 py-0.5 text-[8px] font-black uppercase tracking-wider text-white">{it.badge}</span>
-                                  )}
-                                  {it.download && (
-                                    <span className="inline-flex items-center gap-0.5 rounded bg-slate-100 px-1.5 py-0.5 text-[9px] font-bold text-theme-muted"><Download size={9} /> EXE</span>
-                                  )}
-                                  {it.external && <ArrowUpRight size={12} className="text-theme-muted shrink-0" />}
+                                <span
+                                  className="mt-0.5 flex h-9 w-9 shrink-0 items-center justify-center rounded-lg text-white transition-transform duration-200 group-hover:scale-110 group-hover:-rotate-6"
+                                  style={{ background: cat.accent }}
+                                >
+                                  {it.icon}
                                 </span>
-                                <span className="block text-xs text-theme-muted leading-snug">{it.desc}</span>
-                              </span>
-                            </Link>
-                          );
-                        })}
+                                <span className="min-w-0 flex-1">
+                                  <span className="flex items-center gap-1.5">
+                                    <span className="text-sm font-semibold font-grotesk text-theme-text truncate">{it.label}</span>
+                                    {it.badge && (
+                                      <span className="rounded bg-red-500 px-1.5 py-0.5 text-[8px] font-black uppercase tracking-wider text-white">{it.badge}</span>
+                                    )}
+                                    {it.download && (
+                                      <span className="inline-flex items-center gap-0.5 rounded bg-slate-100 px-1.5 py-0.5 text-[9px] font-bold text-theme-muted"><Download size={9} /> EXE</span>
+                                    )}
+                                    {it.external && <ArrowUpRight size={12} className="text-theme-muted shrink-0" />}
+                                  </span>
+                                  <span className="block text-xs text-theme-muted leading-snug">{it.desc}</span>
+                                </span>
+                              </Link>
+                            );
+                          })}
+                        </div>
                       </div>
-                    </div>
-                    </motion.div>
-                  )}
-                </AnimatePresence>
-              </div>
-            );
-          })}
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
+                </div>
+              );
+            })}
           </div>
 
           <span className="hidden lg:block h-6 w-px bg-slate-200 mx-1" />
