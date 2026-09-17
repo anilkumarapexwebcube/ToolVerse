@@ -7,7 +7,7 @@ import {
 } from "lucide-react";
 
 const EXE_URL =
-  "https://www.dropbox.com/scl/fi/rketviou0i4pbt6ho7rr8/SearchOps-Studio-Setup-1.6.0.exe?rlkey=igid6mwyvq0cn5m705cg5nuv6&st=ycak0hi6&dl=1";
+  "https://www.dropbox.com/scl/fi/rketviou0i4pbt6ho7rr8/SearchOps-Studio-Setup-1.7.16.exe?rlkey=igid6mwyvq0cn5m705cg5nuv6&st=et4q4tj2&dl=1";
 const VERSION = "1.6.0";
 
 const modules = [
