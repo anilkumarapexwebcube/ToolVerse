@@ -10,7 +10,7 @@ import {
 import Link from "next/link";
 
 // Chrome extension shared on Google Drive
-const EXT_FILE_ID = "1WswMe4lTnzXZ00uM0kuQ_arqLyWQMebm";
+const EXT_FILE_ID = "157l1ZjXpB0e7xBrKJlclsFSRABQIemGt";
 const EXT_DOWNLOAD_URL = `https://drive.google.com/uc?export=download&id=${EXT_FILE_ID}`;
 const EXT_VIEW_URL = `https://drive.google.com/file/d/${EXT_FILE_ID}/view?usp=sharing`;
 
