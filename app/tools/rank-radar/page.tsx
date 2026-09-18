@@ -48,7 +48,7 @@ export default function RankRadarPage() {
               <div className="w-14 h-14 rounded-2xl flex items-center justify-center bg-gradient-gold text-white shadow-md shadow-theme-gold/20">
                 <Radar size={28} />
               </div>
-              <span className="badge !bg-theme-gold/10 !text-theme-gold !border-theme-gold/20">Windows desktop app · v{VERSION}</span>
+              <span className="badge !bg-theme-gold/10 !text-theme-gold !border-theme-gold/20">Windows desktop app</span>
             </div>
             <h1 className="text-4xl md:text-5xl font-bold font-grotesk text-theme-text leading-tight mb-4">
               Rank Radar

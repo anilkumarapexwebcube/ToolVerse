@@ -8,7 +8,6 @@ import {
 
 const EXE_URL =
   "https://www.dropbox.com/scl/fi/rketviou0i4pbt6ho7rr8/Vefogix-Studio-Setup.exe?rlkey=igid6mwyvq0cn5m705cg5nuv6&st=cv91t04z&dl=1";
-const VERSION = "1.6.0";
 
 const modules = [
   { icon: <Search size={20} />, name: "Crawl & Index Checker", desc: "Audit crawlability and Google index status at scale." },
@@ -44,7 +43,7 @@ export default function VefogixStudioPage() {
               <div className="w-14 h-14 rounded-2xl flex items-center justify-center bg-gradient-gold text-white shadow-md shadow-theme-gold/20">
                 <Monitor size={28} />
               </div>
-              <span className="badge !bg-theme-gold/10 !text-theme-gold !border-theme-gold/20">Windows desktop app · v{VERSION}</span>
+              <span className="badge !bg-theme-gold/10 !text-theme-gold !border-theme-gold/20">Windows desktop app</span>
             </div>
             <h1 className="text-4xl md:text-5xl font-bold font-grotesk text-theme-text leading-tight mb-4">
               Vefogix Studio
@@ -145,7 +144,7 @@ export default function VefogixStudioPage() {
             whileHover={{ y: -2 }} whileTap={{ scale: 0.97 }}
             className="btn-primary px-8 py-4 text-sm inline-flex items-center gap-2"
           >
-            <Download size={17} /> Download for Windows · v{VERSION}
+            <Download size={17} /> Download for Windows
           </motion.a>
         </div>
       </div>

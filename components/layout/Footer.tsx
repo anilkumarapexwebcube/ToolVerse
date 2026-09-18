@@ -143,7 +143,7 @@ export default function Footer() {
             <div className="relative">
               <h4 className="text-xs font-bold uppercase tracking-widest font-grotesk text-white mb-4">Desktop apps</h4>
               {[
-                { icon: <Monitor size={16} />, name: "Vefogix Studio", desc: "All-in-one SEO desktop app", url: vefogix_EXE_URL },
+                { icon: <Monitor size={16} />, name: "Vefogix Studio", desc: "All-in-one SEO desktop app", url: VEFOGIX_EXE_URL },
                 { icon: <Radar size={16} />, name: "Rank Radar", desc: "True city-level rank tracker", url: RANK_RADAR_EXE_URL },
               ].map((app, i) => (
                 <motion.a
