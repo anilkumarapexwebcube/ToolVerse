@@ -10,9 +10,14 @@ import {
 import Link from "next/link";
 
 // Chrome extension shared on Google Drive
+// Chrome extension shared on Google Drive
 const EXT_FILE_ID = "157l1ZjXpB0e7xBrKJlclsFSRABQIemGt";
-const EXT_DOWNLOAD_URL = `https://drive.google.com/uc?export=download&id=${EXT_FILE_ID}`;
-const EXT_VIEW_URL = `https://drive.google.com/file/d/${EXT_FILE_ID}/view?usp=sharing`;
+
+const EXT_DOWNLOAD_URL =
+  `https://drive.usercontent.google.com/download?id=${EXT_FILE_ID}&export=download`;
+
+const EXT_VIEW_URL =
+  `https://drive.google.com/file/d/${EXT_FILE_ID}/view?usp=sharing`;
 
 // ── Helpers ──────────────────────────────────────────────
 function parseEmails(raw: string): string[] {
