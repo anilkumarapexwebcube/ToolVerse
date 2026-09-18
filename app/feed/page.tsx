@@ -37,9 +37,9 @@ const entries: Entry[] = [
   },
   {
     date: "Sep 2, 2026", tag: "New tool",
-    title: "SearchOps Studio — all-in-one desktop suite",
+    title: "Vefogix Studio — all-in-one desktop suite",
     desc: "Crawl & index audits, rank tracking, broken-link scans, AI visibility, content tools and bulk reports — native on your PC.",
-    icon: <Monitor size={18} />, href: "/tools/searchops-studio",
+    icon: <Monitor size={18} />, href: "/tools/vefogix-studio",
   },
   {
     date: "Sep 1, 2026", tag: "New tool",

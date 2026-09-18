@@ -39,7 +39,7 @@ const CATEGORIES: Category[] = [
     accent: "#c9a84c", // gold
     items: [
       { href: "/tools/gsc-crawl-check", label: "GSC Last Crawl Checker", desc: "Bulk last Google crawl dates", icon: <CalendarClock size={18} />, badge: "New" },
-      { href: "/tools/searchops-studio", label: "SearchOps Studio", desc: "All-in-one SEO desktop app", icon: <Monitor size={18} /> },
+      { href: "/tools/vefogix-studio", label: "Vefogix Studio", desc: "All-in-one SEO desktop app", icon: <Monitor size={18} /> },
       { href: "/tools/rank-radar", label: "Rank Radar", desc: "True city-level rank tracker", icon: <Radar size={18} /> },
       { href: "/tools/ranking-report-filter", label: "Ranking Report Filter", desc: "Excel macro to clean rank exports", icon: <FileSpreadsheet size={18} /> },
     ],

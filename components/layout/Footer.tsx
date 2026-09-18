@@ -7,8 +7,8 @@ import {
   Bot, Search, Mail, Globe, Filter, CalendarClock, FileSpreadsheet,
 } from "lucide-react";
 
-const SEARCHOPS_EXE_URL =
-  "https://www.dropbox.com/scl/fi/rketviou0i4pbt6ho7rr8/SearchOps-Studio-Setup-1.7.16.exe?rlkey=igid6mwyvq0cn5m705cg5nuv6&st=et4q4tj2&dl=1";
+const VEFOGIX_EXE_URL =
+  "https://www.dropbox.com/scl/fi/rketviou0i4pbt6ho7rr8/Vefogix-Studio-Setup.exe?rlkey=igid6mwyvq0cn5m705cg5nuv6&st=cv91t04z&dl=1";
 const RANK_RADAR_EXE_URL =
   "https://www.dropbox.com/scl/fi/5sxksq5swpvhm7a14kjr3/RankRadar.exe?rlkey=zjalmw3ljlmxzzvvzehn5mk84&st=ffek5bay&dl=1";
 
@@ -32,7 +32,7 @@ const groups: FGroup[] = [
     accent: "#c9a84c",
     links: [
       { href: "/tools/gsc-crawl-check", label: "GSC Last Crawl Checker", icon: <CalendarClock size={15} />, badge: "NEW" },
-      { href: "/tools/searchops-studio", label: "SearchOps Studio", icon: <Monitor size={15} /> },
+      { href: "/tools/vefogix-studio", label: "Vefogix Studio", icon: <Monitor size={15} /> },
       { href: "/tools/rank-radar", label: "Rank Radar", icon: <Radar size={15} /> },
       { href: "/tools/ranking-report-filter", label: "Ranking Report Filter", icon: <FileSpreadsheet size={15} /> },
     ],
@@ -143,7 +143,7 @@ export default function Footer() {
             <div className="relative">
               <h4 className="text-xs font-bold uppercase tracking-widest font-grotesk text-white mb-4">Desktop apps</h4>
               {[
-                { icon: <Monitor size={16} />, name: "SearchOps Studio", desc: "All-in-one SEO desktop app", url: SEARCHOPS_EXE_URL },
+                { icon: <Monitor size={16} />, name: "Vefogix Studio", desc: "All-in-one SEO desktop app", url: vefogix_EXE_URL },
                 { icon: <Radar size={16} />, name: "Rank Radar", desc: "True city-level rank tracker", url: RANK_RADAR_EXE_URL },
               ].map((app, i) => (
                 <motion.a

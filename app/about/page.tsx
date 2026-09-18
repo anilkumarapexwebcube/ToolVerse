@@ -22,7 +22,7 @@ const skills = ["Next.js & React", "SEO tooling", "Workflow automation", "Deskto
 const suite = [
   { icon: <Search size={18} />, name: "Domain Insights", note: "DA/DR, traffic & SEO audit" },
   { icon: <CalendarClock size={18} />, name: "GSC Crawl Checker", note: "bulk last-crawl dates" },
-  { icon: <Monitor size={18} />, name: "SearchOps Studio", note: "all-in-one desktop suite" },
+  { icon: <Monitor size={18} />, name: "Vefogix Studio", note: "all-in-one desktop suite" },
   { icon: <Radar size={18} />, name: "Rank Radar", note: "true city-level rankings" },
 ];
 

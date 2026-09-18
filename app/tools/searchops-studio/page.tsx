@@ -7,7 +7,7 @@ import {
 } from "lucide-react";
 
 const EXE_URL =
-  "https://www.dropbox.com/scl/fi/rketviou0i4pbt6ho7rr8/SearchOps-Studio-Setup-1.7.16.exe?rlkey=igid6mwyvq0cn5m705cg5nuv6&st=et4q4tj2&dl=1";
+  "https://www.dropbox.com/scl/fi/rketviou0i4pbt6ho7rr8/Vefogix-Studio-Setup.exe?rlkey=igid6mwyvq0cn5m705cg5nuv6&st=cv91t04z&dl=1";
 const VERSION = "1.6.0";
 
 const modules = [
@@ -24,12 +24,12 @@ const modules = [
 ];
 
 const steps = [
-  { t: "Download the installer", d: "Grab SearchOps-Studio-Setup for Windows." },
+  { t: "Download the installer", d: "Grab Vefogix-Studio-Setup for Windows." },
   { t: "Run the setup", d: "If Windows SmartScreen appears, choose “More info → Run anyway”." },
   { t: "Sign in & start", d: "Open the app, sign in, and your full toolkit is ready — offline-capable." },
 ];
 
-export default function SearchOpsStudioPage() {
+export default function VefogixStudioPage() {
   return (
     <div className="min-h-screen px-4 py-10">
       <div className="max-w-[1200px] w-full mx-auto">
@@ -47,7 +47,7 @@ export default function SearchOpsStudioPage() {
               <span className="badge !bg-theme-gold/10 !text-theme-gold !border-theme-gold/20">Windows desktop app · v{VERSION}</span>
             </div>
             <h1 className="text-4xl md:text-5xl font-bold font-grotesk text-theme-text leading-tight mb-4">
-              SearchOps Studio
+              Vefogix Studio
             </h1>
             <p className="text-lg text-theme-muted leading-relaxed mb-8 max-w-xl">
               The all-in-one SEO desktop suite — crawl &amp; index audits, rank tracking, broken-link scans,
@@ -85,7 +85,7 @@ export default function SearchOpsStudioPage() {
               <span className="w-3 h-3 rounded-full bg-red-400" />
               <span className="w-3 h-3 rounded-full bg-amber-400" />
               <span className="w-3 h-3 rounded-full bg-green-400" />
-              <span className="ml-3 text-xs font-grotesk text-theme-muted">SearchOps Studio</span>
+              <span className="ml-3 text-xs font-grotesk text-theme-muted">Vefogix Studio</span>
             </div>
             <div className="p-4 space-y-1.5">
               {modules.slice(0, 6).map((m, i) => (
@@ -139,7 +139,7 @@ export default function SearchOpsStudioPage() {
         {/* Bottom CTA */}
         <div className="card-base p-8 text-center bg-slate-50 border-slate-200">
           <h2 className="text-2xl font-bold font-grotesk text-theme-text mb-2">Ready to run your search operations?</h2>
-          <p className="text-theme-muted mb-6">Download SearchOps Studio and get the full suite on your desktop.</p>
+          <p className="text-theme-muted mb-6">Download Vefogix Studio and get the full suite on your desktop.</p>
           <motion.a
             href={EXE_URL} target="_blank" rel="noopener noreferrer" download
             whileHover={{ y: -2 }} whileTap={{ scale: 0.97 }}

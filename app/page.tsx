@@ -45,10 +45,10 @@ const tools: Tool[] = [
     comingSoon:  false,
   },
   {
-    href:        "/tools/searchops-studio",
+    href:        "/tools/vefogix-studio",
     label:       "New",
     icon:        <Monitor size={24} />,
-    name:        "SearchOps Studio",
+    name:        "Vefogix Studio",
     tagline:     "All-in-one SEO desktop app for Windows",
     description: "A powerful desktop toolkit for SEO pros — crawl & index audits, rank tracking, broken-link scans, AI-visibility, content tools, and bulk reports, all running natively on your PC.",
     badge:       "NEW",
